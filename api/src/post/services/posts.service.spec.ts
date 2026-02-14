@@ -95,8 +95,8 @@ describe('PostsService', () => {
       Object.assign(post, { id: 'p1' });
       mockPostRepository.findAndCount.mockResolvedValue([[post], 1]);
       mockReactionRepository.find.mockResolvedValue([
-        { emoji: '👍', reactableType: 'post', reactableId: 'p1' },
-        { emoji: '👍', reactableType: 'post', reactableId: 'p1' },
+        { id: 'r1', emoji: '👍', reactableType: 'post', reactableId: 'p1' },
+        { id: 'r2', emoji: '👍', reactableType: 'post', reactableId: 'p1' },
       ]);
       mockCommentRepository.count.mockResolvedValue(5);
       mockAttachmentRepository.find.mockResolvedValue([
@@ -105,7 +105,9 @@ describe('PostsService', () => {
 
       const result = await service.findAll(1, 10);
 
-      expect(result.data[0].reactions).toEqual([{ emoji: '👍', count: 2 }]);
+      expect(result.data[0].reactions).toEqual([
+        { emoji: '👍', count: 2, ids: ['r1', 'r2'] },
+      ]);
       expect(result.data[0].commentCount).toBe(5);
       expect(result.data[0].attachments).toEqual([
         { id: 'a1', category: 'gallery' },
@@ -139,9 +141,9 @@ describe('PostsService', () => {
 
       mockPostRepository.findOne.mockResolvedValue(post);
       mockReactionRepository.find.mockResolvedValue([
-        { emoji: '👍', reactableType: 'post', reactableId: 'post-1' },
-        { emoji: '👍', reactableType: 'post', reactableId: 'post-1' },
-        { emoji: '❤️', reactableType: 'post', reactableId: 'post-1' },
+        { id: 'r1', emoji: '👍', reactableType: 'post', reactableId: 'post-1' },
+        { id: 'r2', emoji: '👍', reactableType: 'post', reactableId: 'post-1' },
+        { id: 'r3', emoji: '❤️', reactableType: 'post', reactableId: 'post-1' },
       ]);
       mockCommentRepository.count.mockResolvedValue(3);
       mockAttachmentRepository.find.mockResolvedValue([]);
@@ -150,8 +152,8 @@ describe('PostsService', () => {
 
       expect(result.id).toBe('post-1');
       expect(result.reactions).toEqual([
-        { emoji: '👍', count: 2 },
-        { emoji: '❤️', count: 1 },
+        { emoji: '👍', count: 2, ids: ['r1', 'r2'] },
+        { emoji: '❤️', count: 1, ids: ['r3'] },
       ]);
       expect(result.commentCount).toBe(3);
       expect(result.attachments).toEqual([]);

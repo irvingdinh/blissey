@@ -41,16 +41,20 @@ export class PostsService {
           where: { reactableType: 'post', reactableId: post.id },
         });
 
-        const reactionGroups: Record<string, { emoji: string; count: number }> =
-          {};
+        const reactionGroups: Record<
+          string,
+          { emoji: string; count: number; ids: string[] }
+        > = {};
         for (const reaction of reactions) {
           if (!reactionGroups[reaction.emoji]) {
             reactionGroups[reaction.emoji] = {
               emoji: reaction.emoji,
               count: 0,
+              ids: [],
             };
           }
           reactionGroups[reaction.emoji].count++;
+          reactionGroups[reaction.emoji].ids.push(reaction.id);
         }
 
         const commentCount = await this.commentRepository.count({
@@ -87,15 +91,20 @@ export class PostsService {
       where: { reactableType: 'post', reactableId: id },
     });
 
-    const reactionGroups: Record<string, { emoji: string; count: number }> = {};
+    const reactionGroups: Record<
+      string,
+      { emoji: string; count: number; ids: string[] }
+    > = {};
     for (const reaction of reactions) {
       if (!reactionGroups[reaction.emoji]) {
         reactionGroups[reaction.emoji] = {
           emoji: reaction.emoji,
           count: 0,
+          ids: [],
         };
       }
       reactionGroups[reaction.emoji].count++;
+      reactionGroups[reaction.emoji].ids.push(reaction.id);
     }
 
     const commentCount = await this.commentRepository.count({

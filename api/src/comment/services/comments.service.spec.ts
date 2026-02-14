@@ -74,11 +74,26 @@ describe('CommentsService', () => {
       mockCommentRepository.find.mockResolvedValue([comment1, comment2]);
       mockReactionRepository.find
         .mockResolvedValueOnce([
-          { emoji: '👍', reactableType: 'comment', reactableId: 'comment-1' },
-          { emoji: '👍', reactableType: 'comment', reactableId: 'comment-1' },
+          {
+            id: 'r1',
+            emoji: '👍',
+            reactableType: 'comment',
+            reactableId: 'comment-1',
+          },
+          {
+            id: 'r2',
+            emoji: '👍',
+            reactableType: 'comment',
+            reactableId: 'comment-1',
+          },
         ])
         .mockResolvedValueOnce([
-          { emoji: '❤️', reactableType: 'comment', reactableId: 'comment-2' },
+          {
+            id: 'r3',
+            emoji: '❤️',
+            reactableType: 'comment',
+            reactableId: 'comment-2',
+          },
         ]);
 
       const result = await service.findByPost('post-1');
@@ -88,8 +103,12 @@ describe('CommentsService', () => {
         order: { createdAt: 'ASC' },
       });
       expect(result).toHaveLength(2);
-      expect(result[0].reactions).toEqual([{ emoji: '👍', count: 2 }]);
-      expect(result[1].reactions).toEqual([{ emoji: '❤️', count: 1 }]);
+      expect(result[0].reactions).toEqual([
+        { emoji: '👍', count: 2, ids: ['r1', 'r2'] },
+      ]);
+      expect(result[1].reactions).toEqual([
+        { emoji: '❤️', count: 1, ids: ['r3'] },
+      ]);
     });
 
     it('should return empty array when post has no comments', async () => {

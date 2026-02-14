@@ -193,7 +193,9 @@ describe('Posts API (e2e)', () => {
 
       const body = res.body as Record<string, unknown>;
       const data = body.data as Record<string, unknown>[];
-      expect(data[0].reactions).toEqual([{ emoji: '🎉', count: 1 }]);
+      expect(data[0].reactions).toEqual([
+        expect.objectContaining({ emoji: '🎉', count: 1 }),
+      ]);
       expect(data[0].commentCount).toBe(1);
       expect(data[0].attachments).toHaveLength(1);
     });
@@ -245,7 +247,9 @@ describe('Posts API (e2e)', () => {
       const body = res.body as Record<string, unknown>;
       expect(body.id).toBe(savedPost.id);
       expect(body.commentCount).toBe(1);
-      expect(body.reactions).toEqual([{ emoji: '👍', count: 1 }]);
+      expect(body.reactions).toEqual([
+        expect.objectContaining({ emoji: '👍', count: 1 }),
+      ]);
       expect(body.attachments).toHaveLength(1);
     });
 

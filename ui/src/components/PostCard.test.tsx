@@ -53,8 +53,8 @@ describe("PostCard", () => {
     renderPostCard(
       makePost({
         reactions: [
-          { emoji: "👍", count: 3 },
-          { emoji: "❤️", count: 1 },
+          { emoji: "👍", count: 3, ids: ["r1", "r2", "r3"] },
+          { emoji: "❤️", count: 1, ids: ["r4"] },
         ],
       }),
     );
@@ -65,9 +65,9 @@ describe("PostCard", () => {
     expect(badges[1].textContent).toContain("❤️");
   });
 
-  it("does not render reactions section when empty", () => {
+  it("renders add reaction button when no reactions exist", () => {
     renderPostCard(makePost({ reactions: [] }));
-    expect(screen.queryByTestId("reaction-badge")).not.toBeInTheDocument();
+    expect(screen.getByTestId("add-reaction-btn")).toBeInTheDocument();
   });
 
   it("renders comment count", () => {

@@ -249,8 +249,8 @@ describe('Reactions API (e2e)', () => {
       const body = res.body as Record<string, unknown>[];
       expect(body).toHaveLength(1);
       expect(body[0].reactions).toEqual([
-        { emoji: '👍', count: 2 },
-        { emoji: '❤️', count: 1 },
+        expect.objectContaining({ emoji: '👍', count: 2 }),
+        expect.objectContaining({ emoji: '❤️', count: 1 }),
       ]);
     });
   });

@@ -6,11 +6,7 @@ import { Link } from "react-router";
 import { BlockRenderer } from "@/components/BlockRenderer";
 import { GalleryCarousel } from "@/components/GalleryCarousel";
 import { Lightbox } from "@/components/Lightbox";
-
-interface Reaction {
-  emoji: string;
-  count: number;
-}
+import { type Reaction, ReactionBar } from "@/components/ReactionBar";
 
 interface Attachment {
   id: string;
@@ -145,19 +141,13 @@ export function PostCard({ post }: PostCardProps) {
         )}
 
         {/* Reactions */}
-        {post.reactions.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1">
-            {post.reactions.map((r) => (
-              <span
-                key={r.emoji}
-                className="badge badge-ghost gap-1 text-sm"
-                data-testid="reaction-badge"
-              >
-                {r.emoji} {r.count}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="mt-3">
+          <ReactionBar
+            reactions={post.reactions}
+            reactableType="post"
+            reactableId={post.id}
+          />
+        </div>
 
         {/* Footer: actions + timestamp */}
         <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-base-200 pt-3">
