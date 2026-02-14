@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
+import { GalleryCarousel } from "@/components/GalleryCarousel";
+import { Lightbox } from "@/components/Lightbox";
 
 interface Reaction {
   emoji: string;
@@ -89,6 +91,8 @@ export function PostCard({ post }: PostCardProps) {
     }
   };
 
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
   const galleryAttachments = post.attachments.filter(
     (a) => a.category === "gallery",
   );
@@ -104,19 +108,23 @@ export function PostCard({ post }: PostCardProps) {
           <BlockRenderer blocks={blocks} />
         </div>
 
-        {/* Gallery thumbnails */}
+        {/* Gallery carousel */}
         {galleryAttachments.length > 0 && (
-          <div className="mt-3 flex gap-2 overflow-x-auto">
-            {galleryAttachments.map((att) => (
-              <img
-                key={att.id}
-                src={`/uploads/${att.thumbnailPath ?? att.filePath}`}
-                alt={att.fileName}
-                className="h-24 w-24 rounded-lg object-cover"
-                loading="lazy"
-              />
-            ))}
+          <div className="mt-3">
+            <GalleryCarousel
+              images={galleryAttachments}
+              onImageClick={(index) => setLightboxIndex(index)}
+            />
           </div>
+        )}
+
+        {/* Lightbox */}
+        {lightboxIndex !== null && (
+          <Lightbox
+            images={galleryAttachments}
+            initialIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+          />
         )}
 
         {/* Audio/Video attachments */}

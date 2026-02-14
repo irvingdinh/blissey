@@ -89,7 +89,7 @@ describe("PostCard", () => {
     expect(editLink).toBeInTheDocument();
   });
 
-  it("renders gallery thumbnails when gallery attachments exist", () => {
+  it("renders gallery carousel when gallery attachments exist", () => {
     renderPostCard(
       makePost({
         attachments: [
@@ -105,11 +105,12 @@ describe("PostCard", () => {
         ],
       }),
     );
-    const img = screen.getByAltText("photo.jpg");
+    expect(screen.getByTestId("gallery-carousel")).toBeInTheDocument();
+    const img = screen.getByTestId("gallery-image-0");
     expect(img).toHaveAttribute("src", "/uploads/thumbnails/photo.jpg");
   });
 
-  it("uses filePath when thumbnailPath is null", () => {
+  it("uses filePath when thumbnailPath is null in gallery", () => {
     renderPostCard(
       makePost({
         attachments: [
@@ -125,7 +126,7 @@ describe("PostCard", () => {
         ],
       }),
     );
-    const img = screen.getByAltText("photo.jpg");
+    const img = screen.getByTestId("gallery-image-0");
     expect(img).toHaveAttribute("src", "/uploads/2024/photo.jpg");
   });
 
