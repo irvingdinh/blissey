@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { unlinkSync } from 'fs';
 import { Repository } from 'typeorm';
@@ -6,6 +7,7 @@ import { Repository } from 'typeorm';
 import { AttachmentEntity } from '../../core/entities/attachment.entity';
 import { DirectoryService } from '../../core/services';
 import { UpsertAttachmentRequestDto } from '../dtos';
+import { ATTACHMENT_CREATED_EVENT } from './thumbnail.service';
 
 @Injectable()
 export class AttachmentsService {
@@ -13,6 +15,7 @@ export class AttachmentsService {
     @InjectRepository(AttachmentEntity)
     private readonly attachmentRepository: Repository<AttachmentEntity>,
     private readonly directoryService: DirectoryService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(
@@ -32,7 +35,13 @@ export class AttachmentsService {
       mimeType: file.mimetype,
     });
 
-    return this.attachmentRepository.save(attachment);
+    const saved = await this.attachmentRepository.save(attachment);
+
+    this.eventEmitter.emit(ATTACHMENT_CREATED_EVENT, {
+      attachmentId: saved.id,
+    });
+
+    return saved;
   }
 
   async remove(id: string): Promise<void> {

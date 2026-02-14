@@ -27,6 +27,7 @@ import { unlinkSync } from 'fs';
 
 import { AttachmentEntity } from '../../core/entities/attachment.entity';
 import { AttachmentsService } from './attachments.service';
+import { ATTACHMENT_CREATED_EVENT } from './thumbnail.service';
 
 describe('AttachmentsService', () => {
   let service: AttachmentsService;
@@ -44,11 +45,16 @@ describe('AttachmentsService', () => {
     ensureDataDir: jest.fn().mockReturnValue('/data/uploads'),
   };
 
+  const mockEventEmitter = {
+    emit: jest.fn(),
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     service = new AttachmentsService(
       mockRepository as any,
       mockDirectoryService as any,
+      mockEventEmitter as any,
     );
   });
 
@@ -94,6 +100,10 @@ describe('AttachmentsService', () => {
         mimeType: 'image/jpeg',
       });
       expect(mockRepository.save).toHaveBeenCalledWith(entity);
+      expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+        ATTACHMENT_CREATED_EVENT,
+        { attachmentId: 'att-1' },
+      );
       expect(result).toBe(entity);
     });
   });
