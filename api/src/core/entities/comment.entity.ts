@@ -5,17 +5,20 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { CommentEntity } from './comment.entity';
+import { PostEntity } from './post.entity';
 
-@Entity('posts')
-export class PostEntity {
+@Entity('comments')
+export class CommentEntity {
   @PrimaryColumn()
   id: string;
+
+  @Column()
+  postId: string;
 
   @Column({ type: 'text' })
   content: string;
@@ -29,8 +32,8 @@ export class PostEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => CommentEntity, (comment) => comment.post)
-  comments: CommentEntity[];
+  @ManyToOne(() => PostEntity, (post) => post.comments)
+  post: PostEntity;
 
   @BeforeInsert()
   generateId() {
