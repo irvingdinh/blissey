@@ -14,6 +14,7 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('blissey API')
     .setVersion('0.0.1')
+    .addTag('attachments')
     .addTag('health')
     .addTag('settings')
     .build();

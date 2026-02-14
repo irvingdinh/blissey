@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { mkdirSync } from 'fs';
 import { join } from 'path';
 
 import type { AppConfig } from '../config/config';
@@ -14,6 +15,12 @@ export class DirectoryService {
 
   dataDir(...segments: string[]): string {
     return join(this.config.dir.data, ...segments);
+  }
+
+  ensureDataDir(...segments: string[]): string {
+    const dir = this.dataDir(...segments);
+    mkdirSync(dir, { recursive: true });
+    return dir;
   }
 
   databasePath(): string {
