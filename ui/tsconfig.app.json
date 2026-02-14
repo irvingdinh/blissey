@@ -2,7 +2,18 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@editorjs/editorjs": ["./src/types/editorjs.d.ts"],
+      "@editorjs/header": ["./src/types/editorjs.d.ts"],
+      "@editorjs/quote": ["./src/types/editorjs.d.ts"],
+      "@editorjs/list": ["./src/types/editorjs.d.ts"],
+      "@editorjs/checklist": ["./src/types/editorjs.d.ts"],
+      "@editorjs/code": ["./src/types/editorjs.d.ts"],
+      "@editorjs/delimiter": ["./src/types/editorjs.d.ts"],
+      "@editorjs/image": ["./src/types/editorjs.d.ts"],
+      "@editorjs/embed": ["./src/types/editorjs.d.ts"],
+      "@editorjs/table": ["./src/types/editorjs.d.ts"],
+      "@editorjs/warning": ["./src/types/editorjs.d.ts"]
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
@@ -28,5 +39,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test"]
 }
