@@ -1,5 +1,6 @@
+import { CleanupService } from './cleanup.service';
 import { DirectoryService } from './directory.service';
 
-export const services = [DirectoryService];
+export const services = [CleanupService, DirectoryService];
 
-export { DirectoryService };
+export { CleanupService, DirectoryService };
