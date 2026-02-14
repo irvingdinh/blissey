@@ -159,6 +159,45 @@ describe('Posts API (e2e)', () => {
       expect(data[0].content).toBe('Active post');
     });
 
+    it('should include reactions, commentCount, and attachments per post', async () => {
+      const post = postRepo.create({ content: 'With extras' });
+      const savedPost = await postRepo.save(post);
+
+      const comment = commentRepo.create({
+        postId: savedPost.id,
+        content: 'A comment',
+      });
+      await commentRepo.save(comment);
+
+      const reaction = reactionRepo.create({
+        reactableType: 'post',
+        reactableId: savedPost.id,
+        emoji: '🎉',
+      });
+      await reactionRepo.save(reaction);
+
+      const attachment = attachmentRepo.create({
+        attachableType: 'post',
+        attachableId: savedPost.id,
+        category: 'gallery',
+        fileName: 'img.jpg',
+        filePath: 'img.jpg',
+        fileSize: 512,
+        mimeType: 'image/jpeg',
+      });
+      await attachmentRepo.save(attachment);
+
+      const res = await request(app.getHttpServer() as object)
+        .get('/api/posts')
+        .expect(200);
+
+      const body = res.body as Record<string, unknown>;
+      const data = body.data as Record<string, unknown>[];
+      expect(data[0].reactions).toEqual([{ emoji: '🎉', count: 1 }]);
+      expect(data[0].commentCount).toBe(1);
+      expect(data[0].attachments).toHaveLength(1);
+    });
+
     it('should return empty when no posts exist', async () => {
       const res = await request(app.getHttpServer() as object)
         .get('/api/posts')

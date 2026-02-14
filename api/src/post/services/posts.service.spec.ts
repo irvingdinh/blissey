@@ -61,9 +61,18 @@ describe('PostsService', () => {
   });
 
   describe('findAll', () => {
+    beforeEach(() => {
+      mockReactionRepository.find.mockResolvedValue([]);
+      mockCommentRepository.count.mockResolvedValue(0);
+      mockAttachmentRepository.find.mockResolvedValue([]);
+    });
+
     it('should return paginated posts ordered by createdAt DESC', async () => {
-      const posts = [new PostEntity(), new PostEntity()];
-      mockPostRepository.findAndCount.mockResolvedValue([posts, 15]);
+      const post1 = new PostEntity();
+      Object.assign(post1, { id: 'p1' });
+      const post2 = new PostEntity();
+      Object.assign(post2, { id: 'p2' });
+      mockPostRepository.findAndCount.mockResolvedValue([[post1, post2], 15]);
 
       const result = await service.findAll(2, 10);
 
@@ -72,31 +81,35 @@ describe('PostsService', () => {
         skip: 10,
         take: 10,
       });
-      expect(result).toEqual({
-        data: posts,
-        total: 15,
-        page: 2,
-        totalPages: 2,
-      });
+      expect(result.total).toBe(15);
+      expect(result.page).toBe(2);
+      expect(result.totalPages).toBe(2);
+      expect(result.data).toHaveLength(2);
+      expect(result.data[0].reactions).toEqual([]);
+      expect(result.data[0].commentCount).toBe(0);
+      expect(result.data[0].attachments).toEqual([]);
     });
 
-    it('should return first page correctly', async () => {
-      const posts = [new PostEntity()];
-      mockPostRepository.findAndCount.mockResolvedValue([posts, 1]);
+    it('should include reactions, commentCount, and attachments per post', async () => {
+      const post = new PostEntity();
+      Object.assign(post, { id: 'p1' });
+      mockPostRepository.findAndCount.mockResolvedValue([[post], 1]);
+      mockReactionRepository.find.mockResolvedValue([
+        { emoji: '👍', reactableType: 'post', reactableId: 'p1' },
+        { emoji: '👍', reactableType: 'post', reactableId: 'p1' },
+      ]);
+      mockCommentRepository.count.mockResolvedValue(5);
+      mockAttachmentRepository.find.mockResolvedValue([
+        { id: 'a1', category: 'gallery' },
+      ]);
 
       const result = await service.findAll(1, 10);
 
-      expect(mockPostRepository.findAndCount).toHaveBeenCalledWith({
-        order: { createdAt: 'DESC' },
-        skip: 0,
-        take: 10,
-      });
-      expect(result).toEqual({
-        data: posts,
-        total: 1,
-        page: 1,
-        totalPages: 1,
-      });
+      expect(result.data[0].reactions).toEqual([{ emoji: '👍', count: 2 }]);
+      expect(result.data[0].commentCount).toBe(5);
+      expect(result.data[0].attachments).toEqual([
+        { id: 'a1', category: 'gallery' },
+      ]);
     });
 
     it('should return empty result when no posts exist', async () => {

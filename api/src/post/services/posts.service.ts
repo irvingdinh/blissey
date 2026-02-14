@@ -28,15 +28,48 @@ export class PostsService {
     private readonly attachmentRepository: Repository<AttachmentEntity>,
   ) {}
 
-  async findAll(
-    page: number,
-    limit: number,
-  ): Promise<PaginatedResult<PostEntity>> {
-    const [data, total] = await this.postRepository.findAndCount({
+  async findAll(page: number, limit: number) {
+    const [posts, total] = await this.postRepository.findAndCount({
       order: { createdAt: 'DESC' },
       skip: (page - 1) * limit,
       take: limit,
     });
+
+    const data = await Promise.all(
+      posts.map(async (post) => {
+        const reactions = await this.reactionRepository.find({
+          where: { reactableType: 'post', reactableId: post.id },
+        });
+
+        const reactionGroups: Record<string, { emoji: string; count: number }> =
+          {};
+        for (const reaction of reactions) {
+          if (!reactionGroups[reaction.emoji]) {
+            reactionGroups[reaction.emoji] = {
+              emoji: reaction.emoji,
+              count: 0,
+            };
+          }
+          reactionGroups[reaction.emoji].count++;
+        }
+
+        const commentCount = await this.commentRepository.count({
+          where: { postId: post.id },
+        });
+
+        const attachments = await this.attachmentRepository.find({
+          where: { attachableType: 'post', attachableId: post.id },
+          order: { createdAt: 'ASC' },
+        });
+
+        return {
+          ...post,
+          reactions: Object.values(reactionGroups),
+          commentCount,
+          attachments,
+        };
+      }),
+    );
 
     return {
       data,
