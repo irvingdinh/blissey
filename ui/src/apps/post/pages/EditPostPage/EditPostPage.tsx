@@ -84,14 +84,16 @@ export default function EditPostPage() {
           if (res.ok) {
             const attachment: Attachment = await res.json();
             setGalleryAttachments((prev) => [...prev, attachment]);
+          } else {
+            showToast("Failed to upload image");
           }
         } catch {
-          // Silent fail
+          showToast("Failed to upload image");
         }
       }
     };
     input.click();
-  }, [id]);
+  }, [id, showToast]);
 
   // Upload file attachment (audio/video)
   const handleFileUpload = useCallback(async () => {
@@ -117,32 +119,37 @@ export default function EditPostPage() {
           if (res.ok) {
             const attachment: Attachment = await res.json();
             setFileAttachments((prev) => [...prev, attachment]);
+          } else {
+            showToast("Failed to upload file");
           }
         } catch {
-          // Silent fail
+          showToast("Failed to upload file");
         }
       }
     };
     input.click();
-  }, [id]);
+  }, [id, showToast]);
 
   // Remove an attachment
-  const removeAttachment = useCallback(async (attachment: Attachment) => {
-    try {
-      await fetch(`/api/attachments/${attachment.id}`, { method: "DELETE" });
-      if (attachment.category === "gallery") {
-        setGalleryAttachments((prev) =>
-          prev.filter((a) => a.id !== attachment.id),
-        );
-      } else {
-        setFileAttachments((prev) =>
-          prev.filter((a) => a.id !== attachment.id),
-        );
+  const removeAttachment = useCallback(
+    async (attachment: Attachment) => {
+      try {
+        await fetch(`/api/attachments/${attachment.id}`, { method: "DELETE" });
+        if (attachment.category === "gallery") {
+          setGalleryAttachments((prev) =>
+            prev.filter((a) => a.id !== attachment.id),
+          );
+        } else {
+          setFileAttachments((prev) =>
+            prev.filter((a) => a.id !== attachment.id),
+          );
+        }
+      } catch {
+        showToast("Failed to remove attachment");
       }
-    } catch {
-      // Silent fail
-    }
-  }, []);
+    },
+    [showToast],
+  );
 
   // Save post
   const handleSave = useCallback(async () => {
@@ -280,7 +287,7 @@ export default function EditPostPage() {
                         className="h-16 w-16 rounded object-cover"
                       />
                       <button
-                        className="btn btn-circle btn-error btn-xs absolute -right-1 -top-1 opacity-0 transition-opacity group-hover:opacity-100"
+                        className="btn btn-circle btn-error btn-xs absolute -right-1 -top-1 opacity-100 sm:opacity-0 transition-opacity sm:group-hover:opacity-100"
                         onClick={() => removeAttachment(att)}
                         data-testid={`remove-gallery-${att.id}`}
                       >

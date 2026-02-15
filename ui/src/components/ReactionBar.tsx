@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { EmojiPicker } from "@/components/EmojiPicker";
 
@@ -20,7 +20,6 @@ export function ReactionBar({
   reactableType,
   reactableId,
 }: ReactionBarProps) {
-  const [showPicker, setShowPicker] = useState(false);
   const queryClient = useQueryClient();
 
   const addReaction = useMutation({
@@ -79,39 +78,60 @@ export function ReactionBar({
         </button>
       ))}
 
-      <div className="relative">
-        <button
-          className="btn btn-ghost btn-xs btn-circle"
-          onClick={() => setShowPicker((v) => !v)}
-          data-testid="add-reaction-btn"
-          title="Add reaction"
-          aria-label="Add reaction"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </button>
+      <PickerToggle onAdd={handleAdd} />
+    </div>
+  );
+}
 
-        {showPicker && (
-          <div className="absolute bottom-full left-0 z-50 mb-1">
-            <EmojiPicker
-              onSelect={handleAdd}
-              onClose={() => setShowPicker(false)}
-            />
-          </div>
-        )}
-      </div>
+function PickerToggle({ onAdd }: { onAdd: (emoji: string) => void }) {
+  const [showPicker, setShowPicker] = useState(false);
+  const [openAbove, setOpenAbove] = useState(true);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  const updatePosition = useCallback(() => {
+    if (!btnRef.current) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    // Picker is ~280px tall; open above if there's room, else below
+    setOpenAbove(rect.top > 300);
+  }, []);
+
+  useEffect(() => {
+    if (showPicker) updatePosition();
+  }, [showPicker, updatePosition]);
+
+  return (
+    <div className="relative">
+      <button
+        ref={btnRef}
+        className="btn btn-ghost btn-sm btn-circle"
+        onClick={() => setShowPicker((v) => !v)}
+        data-testid="add-reaction-btn"
+        title="Add reaction"
+        aria-label="Add reaction"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </button>
+
+      {showPicker && (
+        <div
+          className={`absolute left-0 z-50 ${openAbove ? "bottom-full mb-1" : "top-full mt-1"}`}
+        >
+          <EmojiPicker onSelect={onAdd} onClose={() => setShowPicker(false)} />
+        </div>
+      )}
     </div>
   );
 }

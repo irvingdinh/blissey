@@ -305,6 +305,7 @@ function CommentCard({
   const handleSave = async () => {
     if (!editEditorRef.current) return;
     const data = await editEditorRef.current.getData();
+    if (data.blocks.length === 0) return;
     onSaveEdit(JSON.stringify(data));
   };
 

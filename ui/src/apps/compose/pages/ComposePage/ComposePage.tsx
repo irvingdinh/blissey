@@ -106,11 +106,11 @@ export default function ComposePage() {
         setDrafts(await res.json());
       }
     } catch {
-      // Silent fail
+      showToast("Failed to load drafts");
     } finally {
       setLoadingDrafts(false);
     }
-  }, []);
+  }, [showToast]);
 
   // Load a draft into the editor
   const loadDraft = useCallback(
@@ -136,27 +136,30 @@ export default function ComposePage() {
         setShowDrafts(false);
         showToast("Draft loaded");
       } catch {
-        // Silent fail
+        showToast("Failed to load draft");
       }
     },
     [showToast],
   );
 
   // Delete a draft from the list
-  const deleteDraft = useCallback(async (id: string) => {
-    try {
-      await fetch(`/api/drafts/${id}`, { method: "DELETE" });
-      setDrafts((prev) => prev.filter((d) => d.id !== id));
-      if (draftIdRef.current === id) {
-        setDraftId(null);
-        setGalleryAttachments([]);
-        setFileAttachments([]);
-        await editorRef.current?.setData(EMPTY_CONTENT);
+  const deleteDraft = useCallback(
+    async (id: string) => {
+      try {
+        await fetch(`/api/drafts/${id}`, { method: "DELETE" });
+        setDrafts((prev) => prev.filter((d) => d.id !== id));
+        if (draftIdRef.current === id) {
+          setDraftId(null);
+          setGalleryAttachments([]);
+          setFileAttachments([]);
+          await editorRef.current?.setData(EMPTY_CONTENT);
+        }
+      } catch {
+        showToast("Failed to delete draft");
       }
-    } catch {
-      // Silent fail
-    }
-  }, []);
+    },
+    [showToast],
+  );
 
   // Upload gallery image
   const handleGalleryUpload = useCallback(async () => {
@@ -200,14 +203,16 @@ export default function ComposePage() {
           if (res.ok) {
             const attachment: Attachment = await res.json();
             setGalleryAttachments((prev) => [...prev, attachment]);
+          } else {
+            showToast("Failed to upload image");
           }
         } catch {
-          // Silent fail
+          showToast("Failed to upload image");
         }
       }
     };
     input.click();
-  }, []);
+  }, [showToast]);
 
   // Upload file attachment (audio/video)
   const handleFileUpload = useCallback(async () => {
@@ -251,32 +256,37 @@ export default function ComposePage() {
           if (res.ok) {
             const attachment: Attachment = await res.json();
             setFileAttachments((prev) => [...prev, attachment]);
+          } else {
+            showToast("Failed to upload file");
           }
         } catch {
-          // Silent fail
+          showToast("Failed to upload file");
         }
       }
     };
     input.click();
-  }, []);
+  }, [showToast]);
 
   // Remove an attachment
-  const removeAttachment = useCallback(async (attachment: Attachment) => {
-    try {
-      await fetch(`/api/attachments/${attachment.id}`, { method: "DELETE" });
-      if (attachment.category === "gallery") {
-        setGalleryAttachments((prev) =>
-          prev.filter((a) => a.id !== attachment.id),
-        );
-      } else {
-        setFileAttachments((prev) =>
-          prev.filter((a) => a.id !== attachment.id),
-        );
+  const removeAttachment = useCallback(
+    async (attachment: Attachment) => {
+      try {
+        await fetch(`/api/attachments/${attachment.id}`, { method: "DELETE" });
+        if (attachment.category === "gallery") {
+          setGalleryAttachments((prev) =>
+            prev.filter((a) => a.id !== attachment.id),
+          );
+        } else {
+          setFileAttachments((prev) =>
+            prev.filter((a) => a.id !== attachment.id),
+          );
+        }
+      } catch {
+        showToast("Failed to remove attachment");
       }
-    } catch {
-      // Silent fail
-    }
-  }, []);
+    },
+    [showToast],
+  );
 
   // Publish post
   const handlePublish = useCallback(async () => {
@@ -459,7 +469,7 @@ export default function ComposePage() {
                         className="h-16 w-16 rounded object-cover"
                       />
                       <button
-                        className="btn btn-circle btn-error btn-xs absolute -right-1 -top-1 opacity-0 transition-opacity group-hover:opacity-100"
+                        className="btn btn-circle btn-error btn-xs absolute -right-1 -top-1 opacity-100 sm:opacity-0 transition-opacity sm:group-hover:opacity-100"
                         onClick={() => removeAttachment(att)}
                         data-testid={`remove-gallery-${att.id}`}
                       >
@@ -533,7 +543,7 @@ export default function ComposePage() {
           }}
           data-testid="drafts-panel"
         >
-          <div className="mx-4 w-full max-w-md rounded-lg bg-base-100 shadow-xl">
+          <div className="mx-4 w-full max-w-sm rounded-lg bg-base-100 shadow-xl sm:max-w-md">
             <div className="flex items-center justify-between border-b border-base-300 px-4 py-3">
               <h3 className="font-semibold">Drafts</h3>
               <button

@@ -26,6 +26,7 @@ import { services } from './services';
             cb(null, `${nanoid()}${ext}`);
           },
         }),
+        limits: { fileSize: 50 * 1024 * 1024 },
       }),
       inject: [DirectoryService],
     }),

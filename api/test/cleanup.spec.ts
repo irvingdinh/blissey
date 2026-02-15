@@ -57,11 +57,11 @@ describe('Cleanup (e2e)', () => {
     await module.close();
   });
 
-  afterEach(async () => {
-    await reactionRepo.clear();
-    await attachmentRepo.clear();
-    await commentRepo.clear();
-    await draftRepo.clear();
+  beforeEach(async () => {
+    await reactionRepo.query('DELETE FROM reactions');
+    await attachmentRepo.query('DELETE FROM attachments');
+    await commentRepo.query('DELETE FROM comments');
+    await draftRepo.query('DELETE FROM drafts');
     await postRepo.query('DELETE FROM posts');
   });
 

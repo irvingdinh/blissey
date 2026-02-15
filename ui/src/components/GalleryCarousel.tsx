@@ -164,7 +164,7 @@ export function GalleryCarousel({
               key={i}
               className={cn(
                 "h-2 w-2 rounded-full transition-colors",
-                i === current ? "bg-white" : "bg-white/50",
+                i === current ? "bg-base-content" : "bg-base-content/40",
               )}
               onClick={() => goTo(i)}
               aria-label={`Go to image ${i + 1}`}

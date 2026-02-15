@@ -120,6 +120,7 @@ export function PostCard({ post }: PostCardProps) {
           <Link
             to={`/posts/${post.id}#comments`}
             className="btn btn-ghost btn-sm gap-1 text-xs"
+            aria-label={`${post.commentCount} comments`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -142,6 +143,7 @@ export function PostCard({ post }: PostCardProps) {
             className="btn btn-ghost btn-sm text-xs"
             onClick={handleShare}
             title="Copy as Markdown"
+            aria-label="Copy as Markdown"
             data-testid="share-btn"
           >
             <svg
@@ -163,6 +165,7 @@ export function PostCard({ post }: PostCardProps) {
           <Link
             to={`/posts/${post.id}/edit`}
             className="btn btn-ghost btn-sm text-xs"
+            aria-label="Edit post"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -204,6 +207,7 @@ export function PostCard({ post }: PostCardProps) {
               className="btn btn-ghost btn-sm text-xs"
               onClick={() => setShowDeleteConfirm(true)}
               title="Delete post"
+              aria-label="Delete post"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
