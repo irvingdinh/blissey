@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router";
 import { AttachmentPreview } from "@/components/AttachmentPreview";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
+import { Button } from "@/components/ui/button";
 import type { Attachment } from "@/lib/types";
 import { useToast } from "@/lib/use-toast";
 
@@ -202,19 +203,21 @@ export default function EditPostPage() {
         toolbar={{
           left: (
             <div className="flex items-center gap-2">
-              <button
-                className="btn btn-ghost btn-sm"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate(-1)}
                 data-testid="back-btn"
               >
                 Back
-              </button>
+              </Button>
             </div>
           ),
           right: (
             <div className="flex items-center gap-1">
-              <button
-                className="btn btn-ghost btn-sm"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleGalleryUpload}
                 title="Add gallery images"
                 aria-label="Add gallery images"
@@ -234,9 +237,10 @@ export default function EditPostPage() {
                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-              </button>
-              <button
-                className="btn btn-ghost btn-sm"
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleFileUpload}
                 title="Add audio/video"
                 aria-label="Add audio/video"
@@ -256,15 +260,16 @@ export default function EditPostPage() {
                     d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                   />
                 </svg>
-              </button>
-              <button
-                className="btn btn-primary btn-sm"
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
                 onClick={handleSave}
                 disabled={saving}
                 data-testid="save-btn"
               >
                 {saving ? "Saving..." : "Save"}
-              </button>
+              </Button>
             </div>
           ),
           bottom: (galleryAttachments.length > 0 ||

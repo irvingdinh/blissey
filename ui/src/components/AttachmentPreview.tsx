@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import type { Attachment } from "@/lib/types";
 
 interface AttachmentPreviewProps {
@@ -29,8 +30,10 @@ export function AttachmentPreview({
                 loading="lazy"
                 decoding="async"
               />
-              <button
-                className="btn btn-circle btn-error btn-xs absolute -right-1 -top-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
+              <Button
+                variant="destructive"
+                size="icon"
+                className="absolute -right-1 -top-1 h-5 w-5 rounded-full opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
                 onClick={() => onRemove(att)}
                 data-testid={`remove-gallery-${att.id}`}
               >
@@ -48,7 +51,7 @@ export function AttachmentPreview({
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -66,8 +69,10 @@ export function AttachmentPreview({
               <span className="shrink-0 text-muted-foreground">
                 {(att.fileSize / 1024).toFixed(0)} KB
               </span>
-              <button
-                className="btn btn-ghost btn-xs ml-auto"
+              <Button
+                variant="ghost"
+                size="xs"
+                className="ml-auto"
                 onClick={() => onRemove(att)}
                 data-testid={`remove-file-${att.id}`}
               >
@@ -85,7 +90,7 @@ export function AttachmentPreview({
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </button>
+              </Button>
             </div>
           ))}
         </div>

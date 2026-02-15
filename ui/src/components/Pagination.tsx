@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 interface PaginationProps {
   page: number;
   totalPages: number;
@@ -35,45 +38,49 @@ export function Pagination({
   const pages = getPageNumbers(page, totalPages);
 
   return (
-    <div className="join" data-testid="pagination">
-      <button
-        className="join-item btn btn-sm"
+    <div className="flex items-center gap-1" data-testid="pagination">
+      <Button
+        variant="outline"
+        size="sm"
         disabled={page <= 1}
         onClick={() => onPageChange(page - 1)}
         aria-label="Previous page"
       >
         <span className="hidden sm:inline">Previous</span>
         <span className="sm:hidden">&lsaquo;</span>
-      </button>
+      </Button>
       {pages.map((p, i) =>
         p === "..." ? (
           <span
             key={`ellipsis-${i}`}
-            className="join-item btn btn-sm btn-disabled hidden sm:inline-flex"
+            className="hidden px-2 text-sm text-muted-foreground sm:inline-flex"
             aria-hidden="true"
           >
             ...
           </span>
         ) : (
-          <button
+          <Button
             key={p}
-            className={`join-item btn btn-sm ${p === page ? "btn-active" : ""}`}
+            variant={p === page ? "default" : "outline"}
+            size="sm"
             onClick={() => onPageChange(p)}
             aria-current={p === page ? "page" : undefined}
+            className={cn(p === page && "pointer-events-none")}
           >
             {p}
-          </button>
+          </Button>
         ),
       )}
-      <button
-        className="join-item btn btn-sm"
+      <Button
+        variant="outline"
+        size="sm"
         disabled={page >= totalPages}
         onClick={() => onPageChange(page + 1)}
         aria-label="Next page"
       >
         <span className="hidden sm:inline">Next</span>
         <span className="sm:hidden">&rsaquo;</span>
-      </button>
+      </Button>
     </div>
   );
 }

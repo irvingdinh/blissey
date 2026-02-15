@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { Pagination } from "@/components/Pagination";
 import { PostCard } from "@/components/PostCard";
+import { Button } from "@/components/ui/button";
 import type { Post } from "@/lib/types";
 
 interface FeedResponse {
@@ -36,9 +37,14 @@ export default function FeedPage() {
     return (
       <div className="py-12 text-center">
         <p className="text-muted-foreground">Failed to load posts.</p>
-        <button className="btn btn-ghost btn-sm mt-2" onClick={() => refetch()}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mt-2"
+          onClick={() => refetch()}
+        >
           Try again
-        </button>
+        </Button>
       </div>
     );
   }

@@ -70,7 +70,7 @@ describe("Pagination", () => {
   it("highlights the active page", () => {
     render(<Pagination page={2} totalPages={5} onPageChange={() => {}} />);
     const activeButton = screen.getByText("2");
-    expect(activeButton.className).toContain("btn-active");
+    expect(activeButton.className).toContain("bg-primary");
   });
 
   it("renders ellipsis for large page counts", () => {

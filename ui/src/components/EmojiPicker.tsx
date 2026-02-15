@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 const EMOJI_CATEGORIES: { name: string; emojis: string[] }[] = [
   {
     name: "Smileys",
@@ -251,14 +254,16 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
       {!search && (
         <div className="border-border flex gap-1 overflow-x-auto border-b px-2 py-1">
           {EMOJI_CATEGORIES.map((cat, i) => (
-            <button
+            <Button
               key={cat.name}
-              className={`btn btn-ghost btn-xs shrink-0 ${i === activeCategory ? "btn-active" : ""}`}
+              variant="ghost"
+              size="xs"
+              className={cn("shrink-0", i === activeCategory && "bg-accent")}
               onClick={() => setActiveCategory(i)}
               data-testid={`emoji-category-${cat.name}`}
             >
               {cat.emojis[0]}
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -275,9 +280,11 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
               )}
               <div className="grid grid-cols-8 gap-0.5">
                 {cat.emojis.map((emoji) => (
-                  <button
+                  <Button
                     key={emoji}
-                    className="btn btn-ghost btn-sm h-8 min-h-0 w-8 p-0 text-lg"
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 min-h-0 w-8 p-0 text-lg"
                     onClick={() => {
                       onSelect(emoji);
                       onClose();
@@ -285,7 +292,7 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
                     data-testid="emoji-option"
                   >
                     {emoji}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>

@@ -6,6 +6,7 @@ import { BlockRenderer } from "@/components/BlockRenderer";
 import { GalleryCarousel } from "@/components/GalleryCarousel";
 import { Lightbox } from "@/components/Lightbox";
 import { ReactionBar } from "@/components/ReactionBar";
+import { Button } from "@/components/ui/button";
 import { editorJsonToMarkdown } from "@/lib/editor-json-to-markdown";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
@@ -107,30 +108,33 @@ export function PostCard({ post }: PostCardProps) {
 
         {/* Footer: actions + timestamp */}
         <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-          <Link
-            to={`/posts/${post.id}#comments`}
-            className="btn btn-ghost btn-sm gap-1 text-xs"
-            aria-label={`${post.commentCount} comments`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <Button variant="ghost" size="sm" className="gap-1 text-xs" asChild>
+            <Link
+              to={`/posts/${post.id}#comments`}
+              aria-label={`${post.commentCount} comments`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-              />
-            </svg>
-            {post.commentCount}
-          </Link>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+              </svg>
+              {post.commentCount}
+            </Link>
+          </Button>
 
-          <button
-            className="btn btn-ghost btn-sm text-xs"
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs"
             onClick={handleShare}
             title="Copy as Markdown"
             aria-label="Copy as Markdown"
@@ -150,33 +154,33 @@ export function PostCard({ post }: PostCardProps) {
                 d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
               />
             </svg>
-          </button>
+          </Button>
 
-          <Link
-            to={`/posts/${post.id}/edit`}
-            className="btn btn-ghost btn-sm text-xs"
-            aria-label="Edit post"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-              />
-            </svg>
-          </Link>
+          <Button variant="ghost" size="sm" className="text-xs" asChild>
+            <Link to={`/posts/${post.id}/edit`} aria-label="Edit post">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+            </Link>
+          </Button>
 
           {showDeleteConfirm ? (
             <div className="flex items-center gap-1">
-              <button
-                className="btn btn-error btn-sm text-xs"
+              <Button
+                variant="destructive"
+                size="sm"
+                className="text-xs"
                 onClick={() => {
                   deleteMutation.mutate();
                   setShowDeleteConfirm(false);
@@ -184,17 +188,21 @@ export function PostCard({ post }: PostCardProps) {
                 disabled={deleteMutation.isPending}
               >
                 Confirm
-              </button>
-              <button
-                className="btn btn-ghost btn-sm text-xs"
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs"
                 onClick={() => setShowDeleteConfirm(false)}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           ) : (
-            <button
-              className="btn btn-ghost btn-sm text-xs"
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs"
               onClick={() => setShowDeleteConfirm(true)}
               title="Delete post"
               aria-label="Delete post"
@@ -213,7 +221,7 @@ export function PostCard({ post }: PostCardProps) {
                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                 />
               </svg>
-            </button>
+            </Button>
           )}
 
           <span className="ml-auto text-xs text-muted-foreground">

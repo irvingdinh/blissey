@@ -1,6 +1,8 @@
 import { Link, Outlet, useLocation } from "react-router";
 
+import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/use-theme";
+import { cn } from "@/lib/utils";
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
@@ -53,15 +55,18 @@ export default function AppLayout() {
           </div>
           <div className="flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link
+              <Button
                 key={link.to}
-                to={link.to}
-                className={`btn btn-ghost min-h-[44px] min-w-[44px] ${
-                  location.pathname === link.to ? "btn-active" : ""
-                }`}
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "min-h-[44px] min-w-[44px]",
+                  location.pathname === link.to && "bg-accent",
+                )}
+                asChild
               >
-                {link.label}
-              </Link>
+                <Link to={link.to}>{link.label}</Link>
+              </Button>
             ))}
             <ThemeToggle />
           </div>

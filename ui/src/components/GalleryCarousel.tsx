@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface GalleryImage {
@@ -106,8 +107,10 @@ export function GalleryCarousel({
 
       {/* Left arrow — always visible on touch, hover-reveal on desktop */}
       {current > 0 && (
-        <button
-          className="btn btn-circle btn-sm absolute left-2 top-1/2 -translate-y-1/2 opacity-70 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
+        <Button
+          variant="secondary"
+          size="icon"
+          className="absolute left-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full opacity-70 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
           onClick={prev}
           aria-label="Previous image"
           data-testid="carousel-prev"
@@ -126,13 +129,15 @@ export function GalleryCarousel({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-        </button>
+        </Button>
       )}
 
       {/* Right arrow — always visible on touch, hover-reveal on desktop */}
       {current < count - 1 && (
-        <button
-          className="btn btn-circle btn-sm absolute right-2 top-1/2 -translate-y-1/2 opacity-70 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
+        <Button
+          variant="secondary"
+          size="icon"
+          className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full opacity-70 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
           onClick={next}
           aria-label="Next image"
           data-testid="carousel-next"
@@ -151,7 +156,7 @@ export function GalleryCarousel({
               d="M9 5l7 7-7 7"
             />
           </svg>
-        </button>
+        </Button>
       )}
 
       {/* Dot indicators */}

@@ -8,6 +8,7 @@ import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
 import { PostCard } from "@/components/PostCard";
 import { ReactionBar } from "@/components/ReactionBar";
+import { Button } from "@/components/ui/button";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
 import type { Comment, Post } from "@/lib/types";
@@ -145,12 +146,14 @@ export default function PostDetailPage() {
     return (
       <div className="py-12 text-center">
         <p className="text-muted-foreground">Post not found.</p>
-        <button
-          className="btn btn-ghost btn-sm mt-4"
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mt-4"
           onClick={() => navigate("/")}
         >
           Back to feed
-        </button>
+        </Button>
       </div>
     );
   }
@@ -166,13 +169,14 @@ export default function PostDetailPage() {
           <h2 className="text-lg font-semibold">
             Comments {comments && comments.length > 0 && `(${comments.length})`}
           </h2>
-          <button
-            className="btn btn-primary btn-sm"
+          <Button
+            variant="default"
+            size="sm"
             onClick={() => setShowComposer(true)}
             data-testid="write-comment-btn"
           >
             Write comment
-          </button>
+          </Button>
         </div>
 
         {commentsLoading && (
@@ -221,22 +225,24 @@ export default function PostDetailPage() {
           attachableId=""
           toolbar={{
             left: (
-              <button
-                className="btn btn-ghost btn-sm"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setShowComposer(false)}
               >
                 Cancel
-              </button>
+              </Button>
             ),
             right: (
-              <button
-                className="btn btn-primary btn-sm"
+              <Button
+                variant="default"
+                size="sm"
                 onClick={handleSubmitComment}
                 disabled={submitting}
                 data-testid="submit-comment-btn"
               >
                 {submitting ? "Posting..." : "Post comment"}
-              </button>
+              </Button>
             ),
           }}
         />
@@ -314,18 +320,19 @@ function CommentCard({
           attachableId={comment.id}
           toolbar={{
             left: (
-              <button className="btn btn-ghost btn-sm" onClick={onCancelEdit}>
+              <Button variant="ghost" size="sm" onClick={onCancelEdit}>
                 Cancel
-              </button>
+              </Button>
             ),
             right: (
-              <button
-                className="btn btn-primary btn-sm"
+              <Button
+                variant="default"
+                size="sm"
                 onClick={handleSave}
                 data-testid="save-comment-btn"
               >
                 Save
-              </button>
+              </Button>
             ),
           }}
         />
@@ -355,8 +362,10 @@ function CommentCard({
 
         {/* Footer: actions + timestamp */}
         <div className="mt-2 flex items-center gap-2 border-t border-border pt-2">
-          <button
-            className="btn btn-ghost btn-xs text-xs"
+          <Button
+            variant="ghost"
+            size="xs"
+            className="text-xs"
             onClick={onEdit}
             title="Edit comment"
             aria-label="Edit comment"
@@ -376,27 +385,33 @@ function CommentCard({
                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
               />
             </svg>
-          </button>
+          </Button>
 
           {isDeleting ? (
             <div className="flex items-center gap-1">
-              <button
-                className="btn btn-error btn-xs text-xs"
+              <Button
+                variant="destructive"
+                size="xs"
+                className="text-xs"
                 onClick={onConfirmDelete}
                 data-testid="confirm-delete-comment-btn"
               >
                 Confirm
-              </button>
-              <button
-                className="btn btn-ghost btn-xs text-xs"
+              </Button>
+              <Button
+                variant="ghost"
+                size="xs"
+                className="text-xs"
                 onClick={onCancelDelete}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           ) : (
-            <button
-              className="btn btn-ghost btn-xs text-xs"
+            <Button
+              variant="ghost"
+              size="xs"
+              className="text-xs"
               onClick={onDelete}
               title="Delete comment"
               aria-label="Delete comment"
@@ -416,7 +431,7 @@ function CommentCard({
                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                 />
               </svg>
-            </button>
+            </Button>
           )}
 
           <span className="ml-auto text-xs text-muted-foreground">

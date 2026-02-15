@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
+import { Button } from "@/components/ui/button";
 import { parseBlocks } from "@/lib/parse-blocks";
 import type { TrashedPost } from "@/lib/types";
 
@@ -120,12 +121,14 @@ export default function TrashPage() {
                   )}
 
                   {isExpanded && (
-                    <button
-                      className="btn btn-ghost btn-xs mt-1 self-start"
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      className="mt-1 self-start"
                       onClick={() => setExpandedId(null)}
                     >
                       Collapse
-                    </button>
+                    </Button>
                   )}
 
                   {/* Meta and actions */}
@@ -147,8 +150,10 @@ export default function TrashPage() {
                         : `${post.daysRemaining} day${post.daysRemaining !== 1 ? "s" : ""} left`}
                     </span>
 
-                    <button
-                      className="btn btn-primary btn-sm ml-auto"
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="ml-auto"
                       onClick={() => restoreMutation.mutate(post.id)}
                       disabled={restoreMutation.isPending}
                       data-testid="restore-btn"
@@ -158,7 +163,7 @@ export default function TrashPage() {
                       ) : (
                         "Restore"
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

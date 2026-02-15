@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { EmojiPicker } from "@/components/EmojiPicker";
+import { Button } from "@/components/ui/button";
 import type { Reaction } from "@/lib/types";
 
 interface ReactionBarProps {
@@ -96,9 +97,11 @@ function PickerToggle({ onAdd }: { onAdd: (emoji: string) => void }) {
 
   return (
     <div className="relative">
-      <button
+      <Button
         ref={btnRef}
-        className="btn btn-ghost btn-sm btn-circle"
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8 rounded-full"
         onClick={() => setShowPicker((v) => !v)}
         data-testid="add-reaction-btn"
         title="Add reaction"
@@ -118,7 +121,7 @@ function PickerToggle({ onAdd }: { onAdd: (emoji: string) => void }) {
             d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-      </button>
+      </Button>
 
       {showPicker && (
         <div

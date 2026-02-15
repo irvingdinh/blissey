@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface LightboxImage {
@@ -109,8 +110,10 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
       data-testid="lightbox"
     >
       {/* Close button */}
-      <button
-        className="btn btn-circle btn-ghost btn-sm absolute right-4 top-4 text-white"
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute right-4 top-4 rounded-full text-white hover:bg-white/20"
         onClick={onClose}
         aria-label="Close lightbox"
         data-testid="lightbox-close"
@@ -129,7 +132,7 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
             d="M6 18L18 6M6 6l12 12"
           />
         </svg>
-      </button>
+      </Button>
 
       {/* Counter */}
       {count > 1 && (
@@ -143,8 +146,10 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
 
       {/* Left arrow */}
       {current > 0 && (
-        <button
-          className="btn btn-circle btn-ghost absolute left-4 top-1/2 -translate-y-1/2 text-white"
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full text-white hover:bg-white/20"
           onClick={prev}
           aria-label="Previous image"
           data-testid="lightbox-prev"
@@ -163,7 +168,7 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-        </button>
+        </Button>
       )}
 
       {/* Image */}
@@ -181,8 +186,10 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
 
       {/* Right arrow */}
       {current < count - 1 && (
-        <button
-          className="btn btn-circle btn-ghost absolute right-4 top-1/2 -translate-y-1/2 text-white"
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full text-white hover:bg-white/20"
           onClick={next}
           aria-label="Next image"
           data-testid="lightbox-next"
@@ -201,7 +208,7 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
               d="M9 5l7 7-7 7"
             />
           </svg>
-        </button>
+        </Button>
       )}
     </div>
   );

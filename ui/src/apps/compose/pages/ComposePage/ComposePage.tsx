@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { AttachmentPreview } from "@/components/AttachmentPreview";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
+import { Button } from "@/components/ui/button";
 import { relativeTime } from "@/lib/relative-time";
 import type { Attachment, Draft } from "@/lib/types";
 import { useToast } from "@/lib/use-toast";
@@ -344,12 +345,9 @@ export default function ComposePage() {
         toolbar={{
           left: (
             <div className="flex items-center gap-2">
-              <button
-                className="btn btn-ghost btn-sm"
-                onClick={() => navigate(-1)}
-              >
+              <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
                 Back
-              </button>
+              </Button>
               {saving && (
                 <span className="text-xs text-muted-foreground">Saving...</span>
               )}
@@ -362,8 +360,9 @@ export default function ComposePage() {
           ),
           right: (
             <div className="flex items-center gap-1">
-              <button
-                className="btn btn-ghost btn-sm"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   fetchDrafts();
                   setShowDrafts(true);
@@ -386,9 +385,10 @@ export default function ComposePage() {
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
                 </svg>
-              </button>
-              <button
-                className="btn btn-ghost btn-sm"
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleGalleryUpload}
                 title="Add gallery images"
                 aria-label="Add gallery images"
@@ -408,9 +408,10 @@ export default function ComposePage() {
                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                   />
                 </svg>
-              </button>
-              <button
-                className="btn btn-ghost btn-sm"
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleFileUpload}
                 title="Add audio/video"
                 aria-label="Add audio/video"
@@ -430,15 +431,16 @@ export default function ComposePage() {
                     d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                   />
                 </svg>
-              </button>
-              <button
-                className="btn btn-primary btn-sm"
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
                 onClick={handlePublish}
                 disabled={publishing}
                 data-testid="publish-btn"
               >
                 {publishing ? "Publishing..." : "Publish"}
-              </button>
+              </Button>
             </div>
           ),
           bottom: (galleryAttachments.length > 0 ||
@@ -464,8 +466,9 @@ export default function ComposePage() {
           <div className="mx-4 w-full max-w-sm rounded-lg bg-popover shadow-xl sm:max-w-md">
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <h3 className="font-semibold">Drafts</h3>
-              <button
-                className="btn btn-ghost btn-sm"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setShowDrafts(false)}
               >
                 <svg
@@ -482,7 +485,7 @@ export default function ComposePage() {
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </button>
+              </Button>
             </div>
             <div className="max-h-80 overflow-y-auto p-2">
               {loadingDrafts && (
@@ -513,8 +516,10 @@ export default function ComposePage() {
                         {relativeTime(draft.updatedAt)}
                       </div>
                     </button>
-                    <button
-                      className="btn btn-ghost btn-xs shrink-0"
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      className="shrink-0"
                       onClick={() => deleteDraft(draft.id)}
                       data-testid={`delete-draft-${draft.id}`}
                     >
@@ -532,7 +537,7 @@ export default function ComposePage() {
                           d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                         />
                       </svg>
-                    </button>
+                    </Button>
                   </div>
                 ))}
             </div>
