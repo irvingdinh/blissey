@@ -2,6 +2,15 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Feed Page", () => {
   test.beforeEach(async ({ request }) => {
+    // Soft-delete all active posts to clear the feed
+    const postsRes = await request.get(
+      "http://localhost:3000/api/posts?limit=100",
+    );
+    const postsBody = await postsRes.json();
+    for (const post of postsBody.data ?? []) {
+      await request.delete(`http://localhost:3000/api/posts/${post.id}`);
+    }
+
     // Seed posts via API
     for (let i = 1; i <= 3; i++) {
       await request.post("http://localhost:3000/api/posts", {

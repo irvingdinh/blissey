@@ -4,6 +4,15 @@ test.describe("Share Feature — Copy Post as Markdown", () => {
   let postId: string;
 
   test.beforeEach(async ({ request }) => {
+    // Soft-delete all active posts to clear the feed
+    const postsRes = await request.get(
+      "http://localhost:3000/api/posts?limit=100",
+    );
+    const postsBody = await postsRes.json();
+    for (const post of postsBody.data ?? []) {
+      await request.delete(`http://localhost:3000/api/posts/${post.id}`);
+    }
+
     // Create a post with various block types
     const res = await request.post("http://localhost:3000/api/posts", {
       data: {
