@@ -56,7 +56,7 @@ export function PostCard({ post }: PostCardProps) {
     <Card data-testid="post-card">
       <CardContent className="p-4 sm:p-6">
         {/* Content */}
-        <div className="prose max-w-none">
+        <div className="prose dark:prose-invert max-w-none">
           <BlockRenderer blocks={blocks} />
         </div>
 

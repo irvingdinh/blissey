@@ -6,6 +6,7 @@ import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { parseBlocks } from "@/lib/parse-blocks";
 import type { TrashedPost } from "@/lib/types";
 
@@ -61,7 +62,7 @@ export default function TrashPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <span className="loading loading-spinner loading-md" />
+        <Spinner size="md" />
       </div>
     );
   }
@@ -106,7 +107,7 @@ export default function TrashPage() {
                 <CardContent className="p-4 sm:p-5">
                   {/* Preview or full content */}
                   {isExpanded ? (
-                    <div className="prose max-w-none">
+                    <div className="prose dark:prose-invert max-w-none">
                       <BlockRenderer blocks={blocks} />
                     </div>
                   ) : (
@@ -156,7 +157,7 @@ export default function TrashPage() {
                       data-testid="restore-btn"
                     >
                       {restoreMutation.isPending ? (
-                        <span className="loading loading-spinner loading-xs" />
+                        <Spinner size="xs" />
                       ) : (
                         "Restore"
                       )}

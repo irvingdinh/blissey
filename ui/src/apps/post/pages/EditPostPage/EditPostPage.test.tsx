@@ -54,7 +54,7 @@ describe("EditPostPage", () => {
       new Promise(() => {}),
     );
     renderPage();
-    expect(document.querySelector(".loading-spinner")).toBeInTheDocument();
+    expect(screen.getByTestId("spinner")).toBeInTheDocument();
   });
 
   it("fetches post data on mount", async () => {
@@ -80,9 +80,7 @@ describe("EditPostPage", () => {
 
     await waitFor(() => {
       // Loading spinner should disappear
-      expect(
-        document.querySelector(".loading-spinner"),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("spinner")).not.toBeInTheDocument();
     });
   });
 

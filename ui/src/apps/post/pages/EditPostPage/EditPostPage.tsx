@@ -7,6 +7,7 @@ import { AttachmentPreview } from "@/components/AttachmentPreview";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import type { Attachment } from "@/lib/types";
 
 export default function EditPostPage() {
@@ -183,7 +184,7 @@ export default function EditPostPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <span className="loading loading-spinner loading-md" />
+        <Spinner size="md" />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pagination } from "@/components/Pagination";
 import { PostCard } from "@/components/PostCard";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import type { Post } from "@/lib/types";
 
 interface FeedResponse {
@@ -28,7 +29,7 @@ export default function FeedPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <span className="loading loading-spinner loading-md" />
+        <Spinner size="md" />
       </div>
     );
   }

@@ -11,6 +11,7 @@ import { PostCard } from "@/components/PostCard";
 import { ReactionBar } from "@/components/ReactionBar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
 import type { Comment, Post } from "@/lib/types";
@@ -137,7 +138,7 @@ export default function PostDetailPage() {
   if (postLoading) {
     return (
       <div className="flex justify-center py-12">
-        <span className="loading loading-spinner loading-md" />
+        <Spinner size="md" />
       </div>
     );
   }
@@ -181,7 +182,7 @@ export default function PostDetailPage() {
 
         {commentsLoading && (
           <div className="flex justify-center py-8">
-            <span className="loading loading-spinner loading-sm" />
+            <Spinner size="sm" />
           </div>
         )}
 
@@ -335,7 +336,7 @@ function CommentCard({
     <Card data-testid={`comment-${comment.id}`}>
       <CardContent className="p-4">
         {/* Comment content */}
-        <div className="prose max-w-none text-sm">
+        <div className="prose dark:prose-invert max-w-none text-sm">
           <BlockRenderer blocks={blocks} />
         </div>
 

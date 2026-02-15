@@ -48,7 +48,7 @@ describe("TrashPage", () => {
       new Promise(() => {}),
     );
     renderTrashPage();
-    expect(document.querySelector(".loading-spinner")).toBeInTheDocument();
+    expect(screen.getByTestId("spinner")).toBeInTheDocument();
   });
 
   it("shows empty state when trash is empty", async () => {

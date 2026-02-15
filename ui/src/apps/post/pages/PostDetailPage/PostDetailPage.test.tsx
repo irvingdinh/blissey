@@ -60,7 +60,7 @@ describe("PostDetailPage", () => {
       new Promise(() => {}),
     );
     renderPage();
-    expect(document.querySelector(".loading-spinner")).toBeInTheDocument();
+    expect(screen.getByTestId("spinner")).toBeInTheDocument();
   });
 
   it("shows post not found when post does not exist", async () => {
