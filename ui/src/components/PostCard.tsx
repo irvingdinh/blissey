@@ -7,6 +7,7 @@ import { BlockRenderer } from "@/components/BlockRenderer";
 import { GalleryCarousel } from "@/components/GalleryCarousel";
 import { Lightbox } from "@/components/Lightbox";
 import { type Reaction, ReactionBar } from "@/components/ReactionBar";
+import { editorJsonToMarkdown } from "@/lib/editor-json-to-markdown";
 
 interface Attachment {
   id: string;
@@ -78,10 +79,14 @@ export function PostCard({ post }: PostCardProps) {
     },
   });
 
+  const [showCopiedToast, setShowCopiedToast] = useState(false);
+
   const handleShare = async () => {
-    const text = post.content;
+    const markdown = editorJsonToMarkdown(post.content);
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(markdown);
+      setShowCopiedToast(true);
+      setTimeout(() => setShowCopiedToast(false), 2000);
     } catch {
       // Clipboard API may not be available
     }
@@ -175,7 +180,8 @@ export function PostCard({ post }: PostCardProps) {
           <button
             className="btn btn-ghost btn-sm text-xs"
             onClick={handleShare}
-            title="Copy content to clipboard"
+            title="Copy as Markdown"
+            data-testid="share-btn"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -259,6 +265,18 @@ export function PostCard({ post }: PostCardProps) {
             {relativeTime(post.createdAt)}
           </span>
         </div>
+
+        {/* Copied toast */}
+        {showCopiedToast && (
+          <div
+            className="toast toast-end toast-bottom"
+            data-testid="copied-toast"
+          >
+            <div className="alert alert-success py-2 text-sm">
+              Copied as Markdown
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
