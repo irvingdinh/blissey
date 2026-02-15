@@ -103,10 +103,10 @@ export function GalleryCarousel({
         ))}
       </div>
 
-      {/* Left arrow */}
+      {/* Left arrow — always visible on touch, hover-reveal on desktop */}
       {current > 0 && (
         <button
-          className="btn btn-circle btn-sm absolute left-2 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
+          className="btn btn-circle btn-sm absolute left-2 top-1/2 -translate-y-1/2 opacity-70 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
           onClick={prev}
           aria-label="Previous image"
           data-testid="carousel-prev"
@@ -128,10 +128,10 @@ export function GalleryCarousel({
         </button>
       )}
 
-      {/* Right arrow */}
+      {/* Right arrow — always visible on touch, hover-reveal on desktop */}
       {current < count - 1 && (
         <button
-          className="btn btn-circle btn-sm absolute right-2 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
+          className="btn btn-circle btn-sm absolute right-2 top-1/2 -translate-y-1/2 opacity-70 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
           onClick={next}
           aria-label="Next image"
           data-testid="carousel-next"

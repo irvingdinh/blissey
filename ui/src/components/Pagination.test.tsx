@@ -26,20 +26,24 @@ describe("Pagination", () => {
 
   it("renders Previous and Next buttons", () => {
     render(<Pagination page={2} totalPages={5} onPageChange={() => {}} />);
-    expect(screen.getByText("Previous")).toBeInTheDocument();
-    expect(screen.getByText("Next")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /previous/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /next/i })).toBeInTheDocument();
   });
 
   it("disables Previous on first page", () => {
     render(<Pagination page={1} totalPages={5} onPageChange={() => {}} />);
-    expect(screen.getByText("Previous")).toBeDisabled();
-    expect(screen.getByText("Next")).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: /previous/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /next/i })).not.toBeDisabled();
   });
 
   it("disables Next on last page", () => {
     render(<Pagination page={5} totalPages={5} onPageChange={() => {}} />);
-    expect(screen.getByText("Previous")).not.toBeDisabled();
-    expect(screen.getByText("Next")).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /previous/i }),
+    ).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: /next/i })).toBeDisabled();
   });
 
   it("calls onPageChange when clicking a page number", () => {
@@ -52,14 +56,14 @@ describe("Pagination", () => {
   it("calls onPageChange with next page when clicking Next", () => {
     const onPageChange = vi.fn();
     render(<Pagination page={2} totalPages={5} onPageChange={onPageChange} />);
-    fireEvent.click(screen.getByText("Next"));
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
     expect(onPageChange).toHaveBeenCalledWith(3);
   });
 
   it("calls onPageChange with previous page when clicking Previous", () => {
     const onPageChange = vi.fn();
     render(<Pagination page={3} totalPages={5} onPageChange={onPageChange} />);
-    fireEvent.click(screen.getByText("Previous"));
+    fireEvent.click(screen.getByRole("button", { name: /previous/i }));
     expect(onPageChange).toHaveBeenCalledWith(2);
   });
 

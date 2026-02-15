@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
@@ -17,6 +18,7 @@ export class CommentEntity {
   @PrimaryColumn()
   id: string;
 
+  @Index()
   @Column()
   postId: string;
 

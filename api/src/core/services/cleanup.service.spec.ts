@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unused-vars */
 jest.mock('fs', () => ({
+  existsSync: jest.fn().mockReturnValue(true),
   unlinkSync: jest.fn(),
   mkdirSync: jest.fn(),
 }));
@@ -8,7 +9,12 @@ jest.mock('typeorm', () => {
   const decoratorFactory = () => () => jest.fn();
   return {
     Entity: () => (target: object) => target,
+    Index:
+      (..._args: any[]) =>
+      (target: any) =>
+        target,
     PrimaryColumn: decoratorFactory(),
+    In: jest.fn((arr) => arr),
     Column: decoratorFactory(),
     CreateDateColumn: decoratorFactory(),
     UpdateDateColumn: decoratorFactory(),
@@ -208,7 +214,7 @@ describe('CleanupService', () => {
       });
       expect(mockReactionRepository.delete).toHaveBeenCalledWith({
         reactableType: 'comment',
-        reactableId: 'comment-1',
+        reactableId: ['comment-1'],
       });
       expect(mockReactionRepository.delete).toHaveBeenCalledWith({
         reactableType: 'post',

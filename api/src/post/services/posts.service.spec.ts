@@ -1,9 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unused-vars */
 jest.mock('typeorm', () => {
   const decoratorFactory = () => () => jest.fn();
   return {
     Entity: () => (target: object) => target,
+    Index:
+      (..._args: any[]) =>
+      (target: any) =>
+        target,
     PrimaryColumn: decoratorFactory(),
+    In: jest.fn((arr) => arr),
     Column: decoratorFactory(),
     CreateDateColumn: decoratorFactory(),
     UpdateDateColumn: decoratorFactory(),
@@ -38,8 +43,18 @@ describe('PostsService', () => {
     count: jest.fn(),
   };
 
+  const mockQueryBuilder = {
+    select: jest.fn().mockReturnThis(),
+    addSelect: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis(),
+    andWhere: jest.fn().mockReturnThis(),
+    groupBy: jest.fn().mockReturnThis(),
+    getRawMany: jest.fn().mockResolvedValue([]),
+  };
+
   const mockCommentRepository = {
     count: jest.fn(),
+    createQueryBuilder: jest.fn().mockReturnValue(mockQueryBuilder),
   };
 
   const mockReactionRepository = {
@@ -63,7 +78,7 @@ describe('PostsService', () => {
   describe('findAll', () => {
     beforeEach(() => {
       mockReactionRepository.find.mockResolvedValue([]);
-      mockCommentRepository.count.mockResolvedValue(0);
+      mockQueryBuilder.getRawMany.mockResolvedValue([]);
       mockAttachmentRepository.find.mockResolvedValue([]);
     });
 
@@ -98,9 +113,11 @@ describe('PostsService', () => {
         { id: 'r1', emoji: '👍', reactableType: 'post', reactableId: 'p1' },
         { id: 'r2', emoji: '👍', reactableType: 'post', reactableId: 'p1' },
       ]);
-      mockCommentRepository.count.mockResolvedValue(5);
+      mockQueryBuilder.getRawMany.mockResolvedValue([
+        { postId: 'p1', count: '5' },
+      ]);
       mockAttachmentRepository.find.mockResolvedValue([
-        { id: 'a1', category: 'gallery' },
+        { id: 'a1', category: 'gallery', attachableId: 'p1' },
       ]);
 
       const result = await service.findAll(1, 10);
@@ -110,7 +127,7 @@ describe('PostsService', () => {
       ]);
       expect(result.data[0].commentCount).toBe(5);
       expect(result.data[0].attachments).toEqual([
-        { id: 'a1', category: 'gallery' },
+        { id: 'a1', category: 'gallery', attachableId: 'p1' },
       ]);
     });
 

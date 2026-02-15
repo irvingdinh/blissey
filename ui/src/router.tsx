@@ -1,5 +1,5 @@
 import { type ComponentType } from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 
 import AppLayout from "@/components/AppLayout";
 
@@ -37,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "/trash",
         lazy: lazy(() => import("@/apps/trash/pages/TrashPage/TrashPage")),
+      },
+      {
+        path: "*",
+        element: <Navigate to="/" replace />,
       },
     ],
   },

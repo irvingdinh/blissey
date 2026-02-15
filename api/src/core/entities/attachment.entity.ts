@@ -4,10 +4,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryColumn,
 } from 'typeorm';
 
 @Entity('attachments')
+@Index(['attachableType', 'attachableId'])
 export class AttachmentEntity {
   @PrimaryColumn()
   id: string;

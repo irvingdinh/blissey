@@ -1,8 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unused-vars */
 jest.mock('typeorm', () => {
   const decoratorFactory = () => () => jest.fn();
   return {
     Entity: () => (target: object) => target,
+    Index:
+      (..._args: any[]) =>
+      (target: any) =>
+        target,
     PrimaryColumn: decoratorFactory(),
     Column: decoratorFactory(),
     CreateDateColumn: decoratorFactory(),

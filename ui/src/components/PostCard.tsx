@@ -40,17 +40,17 @@ export function PostCard({ post }: PostCardProps) {
     },
   });
 
-  const [showCopiedToast, setShowCopiedToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleShare = async () => {
     const markdown = editorJsonToMarkdown(post.content);
     try {
       await navigator.clipboard.writeText(markdown);
-      setShowCopiedToast(true);
-      setTimeout(() => setShowCopiedToast(false), 2000);
+      setToastMessage("Copied as Markdown");
     } catch {
-      // Clipboard API may not be available
+      setToastMessage("Failed to copy");
     }
+    setTimeout(() => setToastMessage(null), 2000);
   };
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -227,14 +227,15 @@ export function PostCard({ post }: PostCardProps) {
           </span>
         </div>
 
-        {/* Copied toast */}
-        {showCopiedToast && (
+        {/* Toast */}
+        {toastMessage && (
           <div
             className="toast toast-end toast-bottom"
             data-testid="copied-toast"
+            role="alert"
           >
             <div className="alert alert-success py-2 text-sm">
-              Copied as Markdown
+              {toastMessage}
             </div>
           </div>
         )}

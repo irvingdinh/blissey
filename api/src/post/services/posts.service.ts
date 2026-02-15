@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Not, Repository } from 'typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
 
 import { AttachmentEntity } from '../../core/entities/attachment.entity';
 import { CommentEntity } from '../../core/entities/comment.entity';
@@ -36,29 +36,55 @@ export class PostsService {
       take: limit,
     });
 
-    const data = await Promise.all(
-      posts.map(async (post) => {
-        const reactions = await this.reactionRepository.find({
-          where: { reactableType: 'post', reactableId: post.id },
-        });
+    if (posts.length === 0) {
+      return { data: [], total, page, totalPages: Math.ceil(total / limit) };
+    }
 
-        const commentCount = await this.commentRepository.count({
-          where: { postId: post.id },
-        });
+    const postIds = posts.map((p) => p.id);
 
-        const attachments = await this.attachmentRepository.find({
-          where: { attachableType: 'post', attachableId: post.id },
-          order: { createdAt: 'ASC' },
-        });
-
-        return {
-          ...post,
-          reactions: groupReactions(reactions),
-          commentCount,
-          attachments,
-        };
+    const [reactions, commentCounts, attachments] = await Promise.all([
+      this.reactionRepository.find({
+        where: { reactableType: 'post', reactableId: In(postIds) },
       }),
-    );
+      this.commentRepository
+        .createQueryBuilder('comment')
+        .select('comment.postId', 'postId')
+        .addSelect('COUNT(*)', 'count')
+        .where('comment.postId IN (:...postIds)', { postIds })
+        .andWhere('comment.deletedAt IS NULL')
+        .groupBy('comment.postId')
+        .getRawMany<{ postId: string; count: string }>(),
+      this.attachmentRepository.find({
+        where: { attachableType: 'post', attachableId: In(postIds) },
+        order: { createdAt: 'ASC' },
+      }),
+    ]);
+
+    const reactionsByPost = new Map<string, ReactionEntity[]>();
+    for (const r of reactions) {
+      const arr = reactionsByPost.get(r.reactableId) ?? [];
+      arr.push(r);
+      reactionsByPost.set(r.reactableId, arr);
+    }
+
+    const commentCountByPost = new Map<string, number>();
+    for (const row of commentCounts) {
+      commentCountByPost.set(row.postId, Number(row.count));
+    }
+
+    const attachmentsByPost = new Map<string, AttachmentEntity[]>();
+    for (const a of attachments) {
+      const arr = attachmentsByPost.get(a.attachableId) ?? [];
+      arr.push(a);
+      attachmentsByPost.set(a.attachableId, arr);
+    }
+
+    const data = posts.map((post) => ({
+      ...post,
+      reactions: groupReactions(reactionsByPost.get(post.id) ?? []),
+      commentCount: commentCountByPost.get(post.id) ?? 0,
+      attachments: attachmentsByPost.get(post.id) ?? [],
+    }));
 
     return {
       data,

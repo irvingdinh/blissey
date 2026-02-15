@@ -1,8 +1,12 @@
 export function relativeTime(dateStr: string): string {
   const now = Date.now();
   const date = new Date(dateStr).getTime();
+
+  if (isNaN(date)) return "";
+
   const seconds = Math.floor((now - date) / 1000);
 
+  if (seconds < 0) return "just now";
   if (seconds < 60) return "just now";
 
   const minutes = Math.floor(seconds / 60);

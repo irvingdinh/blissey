@@ -1,9 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unused-vars */
 jest.mock('typeorm', () => {
   const decoratorFactory = () => () => jest.fn();
   return {
     Entity: () => (target: object) => target,
+    Index:
+      (..._args: any[]) =>
+      (target: any) =>
+        target,
     PrimaryColumn: decoratorFactory(),
+    In: jest.fn((arr) => arr),
     Column: decoratorFactory(),
     CreateDateColumn: decoratorFactory(),
     UpdateDateColumn: decoratorFactory(),
@@ -72,29 +77,26 @@ describe('CommentsService', () => {
       });
 
       mockCommentRepository.find.mockResolvedValue([comment1, comment2]);
-      mockReactionRepository.find
-        .mockResolvedValueOnce([
-          {
-            id: 'r1',
-            emoji: '👍',
-            reactableType: 'comment',
-            reactableId: 'comment-1',
-          },
-          {
-            id: 'r2',
-            emoji: '👍',
-            reactableType: 'comment',
-            reactableId: 'comment-1',
-          },
-        ])
-        .mockResolvedValueOnce([
-          {
-            id: 'r3',
-            emoji: '❤️',
-            reactableType: 'comment',
-            reactableId: 'comment-2',
-          },
-        ]);
+      mockReactionRepository.find.mockResolvedValue([
+        {
+          id: 'r1',
+          emoji: '👍',
+          reactableType: 'comment',
+          reactableId: 'comment-1',
+        },
+        {
+          id: 'r2',
+          emoji: '👍',
+          reactableType: 'comment',
+          reactableId: 'comment-1',
+        },
+        {
+          id: 'r3',
+          emoji: '❤️',
+          reactableType: 'comment',
+          reactableId: 'comment-2',
+        },
+      ]);
 
       const result = await service.findByPost('post-1');
 

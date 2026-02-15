@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { CommentEntity } from '../../core/entities/comment.entity';
 import { PostEntity } from '../../core/entities/post.entity';
@@ -28,18 +28,24 @@ export class CommentsService {
       order: { createdAt: 'ASC' },
     });
 
-    return Promise.all(
-      comments.map(async (comment) => {
-        const reactions = await this.reactionRepository.find({
-          where: { reactableType: 'comment', reactableId: comment.id },
-        });
+    if (comments.length === 0) return [];
 
-        return {
-          ...comment,
-          reactions: groupReactions(reactions),
-        };
-      }),
-    );
+    const commentIds = comments.map((c) => c.id);
+    const reactions = await this.reactionRepository.find({
+      where: { reactableType: 'comment', reactableId: In(commentIds) },
+    });
+
+    const reactionsByComment = new Map<string, ReactionEntity[]>();
+    for (const r of reactions) {
+      const arr = reactionsByComment.get(r.reactableId) ?? [];
+      arr.push(r);
+      reactionsByComment.set(r.reactableId, arr);
+    }
+
+    return comments.map((comment) => ({
+      ...comment,
+      reactions: groupReactions(reactionsByComment.get(comment.id) ?? []),
+    }));
   }
 
   async create(

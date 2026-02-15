@@ -40,22 +40,26 @@ export function Pagination({
         className="join-item btn btn-sm"
         disabled={page <= 1}
         onClick={() => onPageChange(page - 1)}
+        aria-label="Previous page"
       >
-        Previous
+        <span className="hidden sm:inline">Previous</span>
+        <span className="sm:hidden">&lsaquo;</span>
       </button>
       {pages.map((p, i) =>
         p === "..." ? (
-          <button
+          <span
             key={`ellipsis-${i}`}
-            className="join-item btn btn-sm btn-disabled"
+            className="join-item btn btn-sm btn-disabled hidden sm:inline-flex"
+            aria-hidden="true"
           >
             ...
-          </button>
+          </span>
         ) : (
           <button
             key={p}
             className={`join-item btn btn-sm ${p === page ? "btn-active" : ""}`}
             onClick={() => onPageChange(p)}
+            aria-current={p === page ? "page" : undefined}
           >
             {p}
           </button>
@@ -65,8 +69,10 @@ export function Pagination({
         className="join-item btn btn-sm"
         disabled={page >= totalPages}
         onClick={() => onPageChange(page + 1)}
+        aria-label="Next page"
       >
-        Next
+        <span className="hidden sm:inline">Next</span>
+        <span className="sm:hidden">&rsaquo;</span>
       </button>
     </div>
   );

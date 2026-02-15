@@ -4,10 +4,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryColumn,
 } from 'typeorm';
 
 @Entity('reactions')
+@Index(['reactableType', 'reactableId'])
 export class ReactionEntity {
   @PrimaryColumn()
   id: string;

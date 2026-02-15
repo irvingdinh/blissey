@@ -14,7 +14,7 @@ interface FeedResponse {
 export default function FeedPage() {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useQuery<FeedResponse>({
+  const { data, isLoading, isError, refetch } = useQuery<FeedResponse>({
     queryKey: ["posts", page],
     queryFn: async () => {
       const res = await fetch(`/api/posts?page=${page}&limit=10`);
@@ -27,6 +27,17 @@ export default function FeedPage() {
     return (
       <div className="flex justify-center py-12">
         <span className="loading loading-spinner loading-md" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-base-content/60">Failed to load posts.</p>
+        <button className="btn btn-ghost btn-sm mt-2" onClick={() => refetch()}>
+          Try again
+        </button>
       </div>
     );
   }

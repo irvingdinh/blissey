@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { unlinkSync } from 'fs';
-import { LessThan, Repository } from 'typeorm';
+import { existsSync, unlinkSync } from 'fs';
+import { In, LessThan, Repository } from 'typeorm';
 
 import { AttachmentEntity } from '../entities/attachment.entity';
 import { CommentEntity } from '../entities/comment.entity';
@@ -68,15 +68,18 @@ export class CleanupService {
         withDeleted: true,
       });
 
-      for (const comment of comments) {
-        await this.removeAttachments('comment', comment.id);
+      if (comments.length > 0) {
+        const commentIds = comments.map((c) => c.id);
+
+        for (const comment of comments) {
+          await this.removeAttachments('comment', comment.id);
+        }
+
         await this.reactionRepository.delete({
           reactableType: 'comment',
-          reactableId: comment.id,
+          reactableId: In(commentIds),
         });
-      }
 
-      if (comments.length > 0) {
         await this.commentRepository.remove(comments);
       }
 
@@ -104,23 +107,25 @@ export class CleanupService {
     const uploadsDir = this.directoryService.dataDir('uploads');
 
     for (const attachment of attachments) {
-      try {
-        unlinkSync(`${uploadsDir}/${attachment.filePath}`);
-      } catch {
-        // File may already be deleted from disk
-      }
+      this.tryDeleteFile(`${uploadsDir}/${attachment.filePath}`);
 
       if (attachment.thumbnailPath) {
-        try {
-          unlinkSync(`${uploadsDir}/${attachment.thumbnailPath}`);
-        } catch {
-          // Thumbnail may already be deleted from disk
-        }
+        this.tryDeleteFile(`${uploadsDir}/${attachment.thumbnailPath}`);
       }
     }
 
     if (attachments.length > 0) {
       await this.attachmentRepository.remove(attachments);
+    }
+  }
+
+  private tryDeleteFile(filePath: string): void {
+    try {
+      if (existsSync(filePath)) {
+        unlinkSync(filePath);
+      }
+    } catch (error) {
+      this.logger.warn(`Failed to delete file: ${filePath}`, error);
     }
   }
 }
