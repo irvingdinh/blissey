@@ -4,22 +4,14 @@ import { useNavigate } from "react-router";
 
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
+import { relativeTime } from "@/lib/relative-time";
+import type { Attachment } from "@/lib/types";
 
 interface Draft {
   id: string;
   content: string;
   createdAt: string;
   updatedAt: string;
-}
-
-interface Attachment {
-  id: string;
-  category: string;
-  fileName: string;
-  filePath: string;
-  fileSize: number;
-  mimeType: string;
-  thumbnailPath: string | null;
 }
 
 const EMPTY_CONTENT: OutputData = { time: Date.now(), blocks: [] };
@@ -378,6 +370,7 @@ export default function ComposePage() {
                   setShowDrafts(true);
                 }}
                 title="Drafts"
+                aria-label="Drafts"
                 data-testid="drafts-btn"
               >
                 <svg
@@ -399,6 +392,7 @@ export default function ComposePage() {
                 className="btn btn-ghost btn-sm"
                 onClick={handleGalleryUpload}
                 title="Add gallery images"
+                aria-label="Add gallery images"
                 data-testid="gallery-upload-btn"
               >
                 <svg
@@ -420,6 +414,7 @@ export default function ComposePage() {
                 className="btn btn-ghost btn-sm"
                 onClick={handleFileUpload}
                 title="Add audio/video"
+                aria-label="Add audio/video"
                 data-testid="file-upload-btn"
               >
                 <svg
@@ -645,21 +640,4 @@ function draftPreview(content: string): string {
   } catch {
     return "Empty draft";
   }
-}
-
-function relativeTime(dateStr: string): string {
-  const now = Date.now();
-  const date = new Date(dateStr).getTime();
-  const seconds = Math.floor((now - date) / 1000);
-
-  if (seconds < 60) return "just now";
-
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
 }

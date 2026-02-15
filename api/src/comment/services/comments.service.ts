@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CommentEntity } from '../../core/entities/comment.entity';
 import { PostEntity } from '../../core/entities/post.entity';
 import { ReactionEntity } from '../../core/entities/reaction.entity';
+import { groupReactions } from '../../core/services';
 import { CreateCommentRequestDto, UpdateCommentRequestDto } from '../dtos';
 
 @Injectable()
@@ -33,25 +34,9 @@ export class CommentsService {
           where: { reactableType: 'comment', reactableId: comment.id },
         });
 
-        const reactionGroups: Record<
-          string,
-          { emoji: string; count: number; ids: string[] }
-        > = {};
-        for (const reaction of reactions) {
-          if (!reactionGroups[reaction.emoji]) {
-            reactionGroups[reaction.emoji] = {
-              emoji: reaction.emoji,
-              count: 0,
-              ids: [],
-            };
-          }
-          reactionGroups[reaction.emoji].count++;
-          reactionGroups[reaction.emoji].ids.push(reaction.id);
-        }
-
         return {
           ...comment,
-          reactions: Object.values(reactionGroups),
+          reactions: groupReactions(reactions),
         };
       }),
     );

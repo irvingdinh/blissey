@@ -1,8 +1,8 @@
-import type { OutputBlockData } from "@editorjs/editorjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
+import { parseBlocks } from "@/lib/parse-blocks";
 
 interface TrashedPost {
   id: string;
@@ -10,14 +10,6 @@ interface TrashedPost {
   createdAt: string;
   deletedAt: string;
   daysRemaining: number;
-}
-
-function parseBlocks(content: string): OutputBlockData[] {
-  try {
-    return JSON.parse(content)?.blocks ?? [];
-  } catch {
-    return [];
-  }
 }
 
 function previewText(content: string): string {
@@ -125,13 +117,13 @@ export default function TrashPage() {
                       <BlockRenderer blocks={blocks} />
                     </div>
                   ) : (
-                    <p
-                      className="cursor-pointer text-base-content/80"
+                    <button
+                      className="cursor-pointer text-left text-base-content/80"
                       onClick={() => setExpandedId(post.id)}
                       data-testid="trash-preview"
                     >
                       {previewText(post.content)}
-                    </p>
+                    </button>
                   )}
 
                   {isExpanded && (

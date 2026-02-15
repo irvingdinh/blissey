@@ -1,4 +1,4 @@
-import type { OutputBlockData, OutputData } from "@editorjs/editorjs";
+import type { OutputData } from "@editorjs/editorjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -8,46 +8,15 @@ import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
 import { type Post, PostCard } from "@/components/PostCard";
 import { type Reaction, ReactionBar } from "@/components/ReactionBar";
+import { parseBlocks } from "@/lib/parse-blocks";
+import { relativeTime } from "@/lib/relative-time";
 
-interface Comment {
+type Comment = {
   id: string;
-  postId: string;
   content: string;
   createdAt: string;
-  updatedAt: string;
   reactions: Reaction[];
-}
-
-function parseBlocks(content: string): OutputBlockData[] {
-  try {
-    return JSON.parse(content)?.blocks ?? [];
-  } catch {
-    return [];
-  }
-}
-
-function relativeTime(dateStr: string): string {
-  const now = Date.now();
-  const date = new Date(dateStr).getTime();
-  const seconds = Math.floor((now - date) / 1000);
-
-  if (seconds < 60) return "just now";
-
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-
-  const months = Math.floor(days / 30);
-  if (months < 12) return `${months}mo ago`;
-
-  const years = Math.floor(months / 12);
-  return `${years}y ago`;
-}
+};
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -61,6 +30,7 @@ export default function PostDetailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   // Fetch post
   const {
@@ -125,7 +95,8 @@ export default function PostDetailPage() {
         setShowComposer(false);
       }
     } catch {
-      // Silent fail
+      setToast("Failed to post comment");
+      setTimeout(() => setToast(null), 2000);
     } finally {
       setSubmitting(false);
     }
@@ -276,6 +247,15 @@ export default function PostDetailPage() {
           }}
         />
       )}
+
+      {/* Toast notification */}
+      {toast && (
+        <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2">
+          <div className="alert alert-error shadow-lg">
+            <span className="text-sm">{toast}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -384,6 +364,7 @@ function CommentCard({
             className="btn btn-ghost btn-xs text-xs"
             onClick={onEdit}
             title="Edit comment"
+            aria-label="Edit comment"
             data-testid="edit-comment-btn"
           >
             <svg
@@ -423,6 +404,7 @@ function CommentCard({
               className="btn btn-ghost btn-xs text-xs"
               onClick={onDelete}
               title="Delete comment"
+              aria-label="Delete comment"
               data-testid="delete-comment-btn"
             >
               <svg

@@ -17,7 +17,7 @@
     "test:watch": "jest --selectProjects 'Unit Testing' --watch",
     "test:cov": "jest --selectProjects 'Unit Testing' --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --selectProjects 'Unit Testing' --runInBand",
-    "test:e2e": "jest --selectProjects 'Integration Testing'"
+    "test:e2e": "jest --selectProjects 'Integration Testing' --runInBand"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

@@ -1,4 +1,3 @@
-import type { OutputBlockData } from "@editorjs/editorjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
@@ -8,16 +7,9 @@ import { GalleryCarousel } from "@/components/GalleryCarousel";
 import { Lightbox } from "@/components/Lightbox";
 import { type Reaction, ReactionBar } from "@/components/ReactionBar";
 import { editorJsonToMarkdown } from "@/lib/editor-json-to-markdown";
-
-interface Attachment {
-  id: string;
-  category: string;
-  fileName: string;
-  filePath: string;
-  fileSize: number;
-  mimeType: string;
-  thumbnailPath: string | null;
-}
+import { parseBlocks } from "@/lib/parse-blocks";
+import { relativeTime } from "@/lib/relative-time";
+import type { Attachment } from "@/lib/types";
 
 export interface Post {
   id: string;
@@ -27,37 +19,6 @@ export interface Post {
   reactions: Reaction[];
   commentCount: number;
   attachments: Attachment[];
-}
-
-function parseBlocks(content: string): OutputBlockData[] {
-  try {
-    return JSON.parse(content)?.blocks ?? [];
-  } catch {
-    return [];
-  }
-}
-
-function relativeTime(dateStr: string): string {
-  const now = Date.now();
-  const date = new Date(dateStr).getTime();
-  const seconds = Math.floor((now - date) / 1000);
-
-  if (seconds < 60) return "just now";
-
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-
-  const months = Math.floor(days / 30);
-  if (months < 12) return `${months}mo ago`;
-
-  const years = Math.floor(months / 12);
-  return `${years}y ago`;
 }
 
 interface PostCardProps {

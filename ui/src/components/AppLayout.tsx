@@ -44,7 +44,7 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-base-200">
-      <nav className="navbar bg-base-100 shadow-sm">
+      <nav className="navbar sticky top-0 z-40 bg-base-100 shadow-sm">
         <div className="mx-auto flex w-full max-w-3xl items-center px-4">
           <div className="flex-1">
             <Link to="/" className="text-xl font-bold">
@@ -56,7 +56,7 @@ export default function AppLayout() {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`btn btn-ghost btn-sm ${
+                className={`btn btn-ghost min-h-[44px] min-w-[44px] ${
                   location.pathname === link.to ? "btn-active" : ""
                 }`}
               >

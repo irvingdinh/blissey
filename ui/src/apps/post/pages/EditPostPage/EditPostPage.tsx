@@ -4,16 +4,7 @@ import { useNavigate, useParams } from "react-router";
 
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
-
-interface Attachment {
-  id: string;
-  category: string;
-  fileName: string;
-  filePath: string;
-  fileSize: number;
-  mimeType: string;
-  thumbnailPath: string | null;
-}
+import type { Attachment } from "@/lib/types";
 
 export default function EditPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -222,6 +213,7 @@ export default function EditPostPage() {
                 className="btn btn-ghost btn-sm"
                 onClick={handleGalleryUpload}
                 title="Add gallery images"
+                aria-label="Add gallery images"
                 data-testid="gallery-upload-btn"
               >
                 <svg
@@ -243,6 +235,7 @@ export default function EditPostPage() {
                 className="btn btn-ghost btn-sm"
                 onClick={handleFileUpload}
                 title="Add audio/video"
+                aria-label="Add audio/video"
                 data-testid="file-upload-btn"
               >
                 <svg

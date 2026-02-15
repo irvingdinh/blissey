@@ -6,6 +6,7 @@ import { AttachmentEntity } from '../../core/entities/attachment.entity';
 import { CommentEntity } from '../../core/entities/comment.entity';
 import { PostEntity } from '../../core/entities/post.entity';
 import { ReactionEntity } from '../../core/entities/reaction.entity';
+import { groupReactions } from '../../core/services';
 import { CreatePostRequestDto, UpdatePostRequestDto } from '../dtos';
 
 export interface PaginatedResult<T> {
@@ -41,22 +42,6 @@ export class PostsService {
           where: { reactableType: 'post', reactableId: post.id },
         });
 
-        const reactionGroups: Record<
-          string,
-          { emoji: string; count: number; ids: string[] }
-        > = {};
-        for (const reaction of reactions) {
-          if (!reactionGroups[reaction.emoji]) {
-            reactionGroups[reaction.emoji] = {
-              emoji: reaction.emoji,
-              count: 0,
-              ids: [],
-            };
-          }
-          reactionGroups[reaction.emoji].count++;
-          reactionGroups[reaction.emoji].ids.push(reaction.id);
-        }
-
         const commentCount = await this.commentRepository.count({
           where: { postId: post.id },
         });
@@ -68,7 +53,7 @@ export class PostsService {
 
         return {
           ...post,
-          reactions: Object.values(reactionGroups),
+          reactions: groupReactions(reactions),
           commentCount,
           attachments,
         };
@@ -91,22 +76,6 @@ export class PostsService {
       where: { reactableType: 'post', reactableId: id },
     });
 
-    const reactionGroups: Record<
-      string,
-      { emoji: string; count: number; ids: string[] }
-    > = {};
-    for (const reaction of reactions) {
-      if (!reactionGroups[reaction.emoji]) {
-        reactionGroups[reaction.emoji] = {
-          emoji: reaction.emoji,
-          count: 0,
-          ids: [],
-        };
-      }
-      reactionGroups[reaction.emoji].count++;
-      reactionGroups[reaction.emoji].ids.push(reaction.id);
-    }
-
     const commentCount = await this.commentRepository.count({
       where: { postId: id },
     });
@@ -118,7 +87,7 @@ export class PostsService {
 
     return {
       ...post,
-      reactions: Object.values(reactionGroups),
+      reactions: groupReactions(reactions),
       commentCount,
       attachments,
     };

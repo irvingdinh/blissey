@@ -85,6 +85,7 @@ export function ReactionBar({
           onClick={() => setShowPicker((v) => !v)}
           data-testid="add-reaction-btn"
           title="Add reaction"
+          aria-label="Add reaction"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
