@@ -1,15 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+import { cleanAll } from "./helpers";
+
 test.describe("Feed Page", () => {
   test.beforeEach(async ({ request }) => {
-    // Soft-delete all active posts to clear the feed
-    const postsRes = await request.get(
-      "http://localhost:3000/api/posts?limit=100",
-    );
-    const postsBody = await postsRes.json();
-    for (const post of postsBody.data ?? []) {
-      await request.delete(`http://localhost:3000/api/posts/${post.id}`);
-    }
+    await cleanAll(request);
 
     // Seed posts via API
     for (let i = 1; i <= 3; i++) {
@@ -74,12 +69,7 @@ test.describe("Feed Page", () => {
   });
 
   test("shows empty state when no posts exist", async ({ page, request }) => {
-    // Delete all posts first
-    const res = await request.get("http://localhost:3000/api/posts?limit=100");
-    const body = await res.json();
-    for (const post of body.data) {
-      await request.delete(`http://localhost:3000/api/posts/${post.id}`);
-    }
+    await cleanAll(request);
 
     await page.goto("/");
     await expect(page.locator("text=No posts yet.")).toBeVisible();

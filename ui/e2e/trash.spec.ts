@@ -1,13 +1,7 @@
 import type { APIRequestContext } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
-async function emptyTrash(request: APIRequestContext) {
-  const trashRes = await request.get("http://localhost:3000/api/trash");
-  const trashedPosts = await trashRes.json();
-  for (const post of trashedPosts) {
-    await request.post(`http://localhost:3000/api/trash/${post.id}/restore`);
-  }
-}
+import { cleanAll, cleanTrash } from "./helpers";
 
 async function createAndTrashPost(
   request: APIRequestContext,
@@ -27,7 +21,8 @@ async function createAndTrashPost(
 
 test.describe("Trash Page", () => {
   test("shows empty state when no trashed posts", async ({ page, request }) => {
-    await emptyTrash(request);
+    await cleanAll(request);
+    await cleanTrash(request);
 
     await page.goto("/trash");
     await expect(page.locator('[data-testid="trash-empty"]')).toBeVisible();
@@ -44,7 +39,8 @@ test.describe("Trash Page", () => {
     page,
     request,
   }) => {
-    await emptyTrash(request);
+    await cleanAll(request);
+    await cleanTrash(request);
     await createAndTrashPost(request, "Preview test post");
 
     await page.goto("/trash");
@@ -62,16 +58,14 @@ test.describe("Trash Page", () => {
 
     const restoreBtn = trashItem.locator('[data-testid="restore-btn"]');
     await expect(restoreBtn).toBeVisible();
-
-    // Cleanup
-    await emptyTrash(request);
   });
 
   test("expands post content when clicking preview", async ({
     page,
     request,
   }) => {
-    await emptyTrash(request);
+    await cleanAll(request);
+    await cleanTrash(request);
     await createAndTrashPost(request, "Expandable content");
 
     await page.goto("/trash");
@@ -82,16 +76,14 @@ test.describe("Trash Page", () => {
     await preview.click();
 
     await expect(trashItem.locator("text=Collapse")).toBeVisible();
-
-    // Cleanup
-    await emptyTrash(request);
   });
 
   test("restores a post from trash and it appears in feed", async ({
     page,
     request,
   }) => {
-    await emptyTrash(request);
+    await cleanAll(request);
+    await cleanTrash(request);
     await createAndTrashPost(request, "Restore me please");
 
     await page.goto("/trash");

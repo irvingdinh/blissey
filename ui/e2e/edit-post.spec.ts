@@ -1,27 +1,14 @@
 import { expect, test } from "@playwright/test";
 
+import { cleanAll } from "./helpers";
+
 test.describe("Edit Post Page", () => {
   test.describe.configure({ mode: "serial" });
 
   let postId: string;
 
   test.beforeEach(async ({ request }) => {
-    // Clean up existing posts
-    const postsRes = await request.get(
-      "http://localhost:3000/api/posts?limit=100",
-    );
-    const postsBody = await postsRes.json();
-    for (const post of postsBody.data ?? []) {
-      await request.delete(`http://localhost:3000/api/posts/${post.id}`);
-    }
-
-    // Clean up trashed posts
-    const trashRes = await request.get("http://localhost:3000/api/trash");
-    const trashBody = await trashRes.json();
-    for (const post of trashBody ?? []) {
-      await request.post(`http://localhost:3000/api/trash/${post.id}/restore`);
-      await request.delete(`http://localhost:3000/api/posts/${post.id}`);
-    }
+    await cleanAll(request);
 
     // Create a test post via API
     const createRes = await request.post("http://localhost:3000/api/posts", {

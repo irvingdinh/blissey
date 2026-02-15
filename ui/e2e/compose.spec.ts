@@ -1,24 +1,12 @@
 import { expect, test } from "@playwright/test";
 
+import { cleanAll } from "./helpers";
+
 test.describe("Compose Page", () => {
   test.describe.configure({ mode: "serial" });
 
   test.beforeEach(async ({ request }) => {
-    // Clean up existing drafts
-    const draftsRes = await request.get("http://localhost:3000/api/drafts");
-    const drafts = await draftsRes.json();
-    for (const draft of drafts) {
-      await request.delete(`http://localhost:3000/api/drafts/${draft.id}`);
-    }
-
-    // Clean up existing posts
-    const postsRes = await request.get(
-      "http://localhost:3000/api/posts?limit=100",
-    );
-    const postsBody = await postsRes.json();
-    for (const post of postsBody.data ?? []) {
-      await request.delete(`http://localhost:3000/api/posts/${post.id}`);
-    }
+    await cleanAll(request);
   });
 
   test("renders fullscreen editor with toolbar", async ({ page }) => {

@@ -1,9 +1,13 @@
 import { expect, test } from "@playwright/test";
 
+import { cleanAll } from "./helpers";
+
 test.describe("Post Detail Page", () => {
   let postId: string;
 
   test.beforeEach(async ({ request }) => {
+    await cleanAll(request);
+
     // Create a post with content
     const res = await request.post("http://localhost:3000/api/posts", {
       data: {
