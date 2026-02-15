@@ -114,6 +114,83 @@ describe('Attachments API (e2e)', () => {
     });
   });
 
+  describe('PUT /api/attachments/:id', () => {
+    it('should update attachment ownership', async () => {
+      const draft = await dataSource
+        .getRepository(DraftEntity)
+        .save(
+          dataSource
+            .getRepository(DraftEntity)
+            .create({ content: '{"blocks":[]}' }),
+        );
+
+      const uploadRes = await request(app.getHttpServer() as object)
+        .post('/api/attachments')
+        .field('attachable_type', 'draft')
+        .field('attachable_id', draft.id)
+        .field('category', 'gallery')
+        .attach('file', Buffer.from('image data'), 'photo.jpg')
+        .expect(201);
+
+      const uploadBody = uploadRes.body as Record<string, unknown>;
+      const attachmentId = uploadBody.id as string;
+
+      const post = postRepo.create({ content: '{"blocks":[]}' });
+      const savedPost = await postRepo.save(post);
+
+      const updateRes = await request(app.getHttpServer() as object)
+        .put(`/api/attachments/${attachmentId}`)
+        .send({
+          attachable_type: 'post',
+          attachable_id: savedPost.id,
+        })
+        .expect(200);
+
+      const body = updateRes.body as Record<string, unknown>;
+      expect(body.attachableType).toBe('post');
+      expect(body.attachableId).toBe(savedPost.id);
+
+      const dbRecord = await attachmentRepo.findOne({
+        where: { id: attachmentId },
+      });
+      expect(dbRecord!.attachableType).toBe('post');
+      expect(dbRecord!.attachableId).toBe(savedPost.id);
+    });
+
+    it('should return 404 when updating non-existent attachment', async () => {
+      await request(app.getHttpServer() as object)
+        .put('/api/attachments/nonexistent')
+        .send({
+          attachable_type: 'post',
+          attachable_id: 'some-id',
+        })
+        .expect(404);
+    });
+
+    it('should reject update with invalid attachable_type', async () => {
+      const post = postRepo.create({ content: '{"blocks":[]}' });
+      const savedPost = await postRepo.save(post);
+
+      const uploadRes = await request(app.getHttpServer() as object)
+        .post('/api/attachments')
+        .field('attachable_type', 'post')
+        .field('attachable_id', savedPost.id)
+        .field('category', 'gallery')
+        .attach('file', Buffer.from('data'), 'file.txt')
+        .expect(201);
+
+      const uploadBody = uploadRes.body as Record<string, unknown>;
+
+      await request(app.getHttpServer() as object)
+        .put(`/api/attachments/${uploadBody.id as string}`)
+        .send({
+          attachable_type: 'invalid',
+          attachable_id: 'some-id',
+        })
+        .expect(400);
+    });
+  });
+
   describe('DELETE /api/attachments/:id', () => {
     it('should delete an attachment and return 204', async () => {
       const post = postRepo.create({ content: '{"blocks":[]}' });

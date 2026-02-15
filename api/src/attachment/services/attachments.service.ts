@@ -6,7 +6,10 @@ import { Repository } from 'typeorm';
 
 import { AttachmentEntity } from '../../core/entities/attachment.entity';
 import { DirectoryService } from '../../core/services';
-import { UpsertAttachmentRequestDto } from '../dtos';
+import {
+  UpdateAttachmentRequestDto,
+  UpsertAttachmentRequestDto,
+} from '../dtos';
 import { ATTACHMENT_CREATED_EVENT } from './thumbnail.service';
 
 @Injectable()
@@ -42,6 +45,21 @@ export class AttachmentsService {
     });
 
     return saved;
+  }
+
+  async update(
+    id: string,
+    dto: UpdateAttachmentRequestDto,
+  ): Promise<AttachmentEntity> {
+    const attachment = await this.attachmentRepository.findOne({
+      where: { id },
+    });
+    if (!attachment)
+      throw new NotFoundException(`Attachment "${id}" not found`);
+
+    attachment.attachableType = dto.attachable_type;
+    attachment.attachableId = dto.attachable_id;
+    return this.attachmentRepository.save(attachment);
   }
 
   async remove(id: string): Promise<void> {

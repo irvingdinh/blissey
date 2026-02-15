@@ -108,6 +108,51 @@ describe('AttachmentsService', () => {
     });
   });
 
+  describe('update', () => {
+    it('should update attachment ownership', async () => {
+      const attachment = new AttachmentEntity();
+      Object.assign(attachment, {
+        id: 'att-1',
+        attachableType: 'draft',
+        attachableId: 'draft-1',
+      });
+
+      const updated = new AttachmentEntity();
+      Object.assign(updated, {
+        id: 'att-1',
+        attachableType: 'post',
+        attachableId: 'post-1',
+      });
+
+      mockRepository.findOne.mockResolvedValue(attachment);
+      mockRepository.save.mockResolvedValue(updated);
+
+      const result = await service.update('att-1', {
+        attachable_type: 'post',
+        attachable_id: 'post-1',
+      });
+
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 'att-1' },
+      });
+      expect(attachment.attachableType).toBe('post');
+      expect(attachment.attachableId).toBe('post-1');
+      expect(mockRepository.save).toHaveBeenCalledWith(attachment);
+      expect(result).toBe(updated);
+    });
+
+    it('should throw NotFoundException if attachment does not exist', async () => {
+      mockRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.update('nonexistent', {
+          attachable_type: 'post',
+          attachable_id: 'post-1',
+        }),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
   describe('remove', () => {
     it('should delete the attachment record and file from disk', async () => {
       const attachment = new AttachmentEntity();
