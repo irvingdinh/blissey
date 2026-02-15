@@ -13,7 +13,7 @@ interface ImageBlockProps {
 export function ImageBlock({ data }: ImageBlockProps) {
   return (
     <figure
-      className={data.withBackground ? "rounded-lg bg-base-200 p-4" : undefined}
+      className={data.withBackground ? "rounded-lg bg-muted p-4" : undefined}
     >
       <img
         src={data.file.url}
@@ -21,7 +21,7 @@ export function ImageBlock({ data }: ImageBlockProps) {
         className={[
           "rounded-lg",
           data.stretched ? "w-full" : "mx-auto max-w-full",
-          data.withBorder ? "border border-base-300" : "",
+          data.withBorder ? "border border-border" : "",
         ]
           .filter(Boolean)
           .join(" ")}
@@ -29,7 +29,7 @@ export function ImageBlock({ data }: ImageBlockProps) {
         decoding="async"
       />
       {data.caption && (
-        <figcaption className="mt-2 text-center text-sm text-base-content/60">
+        <figcaption className="mt-2 text-center text-sm text-muted-foreground">
           <InlineContent as="span" html={data.caption} />
         </figcaption>
       )}

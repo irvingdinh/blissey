@@ -77,7 +77,7 @@ export default function TrashPage() {
         <div className="py-12 text-center" data-testid="trash-empty">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="mx-auto mb-3 h-12 w-12 text-base-content/30"
+            className="mx-auto mb-3 h-12 w-12 text-muted-foreground/30"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -89,7 +89,7 @@ export default function TrashPage() {
               d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
             />
           </svg>
-          <p className="text-base-content/60">Trash is empty.</p>
+          <p className="text-muted-foreground">Trash is empty.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -100,7 +100,7 @@ export default function TrashPage() {
             return (
               <div
                 key={post.id}
-                className="card bg-base-100 shadow-sm"
+                className="card bg-card shadow-sm"
                 data-testid="trash-item"
               >
                 <div className="card-body p-4 sm:p-5">
@@ -111,7 +111,7 @@ export default function TrashPage() {
                     </div>
                   ) : (
                     <button
-                      className="cursor-pointer text-left text-base-content/80"
+                      className="cursor-pointer text-left text-foreground/80"
                       onClick={() => setExpandedId(post.id)}
                       data-testid="trash-preview"
                     >
@@ -129,8 +129,8 @@ export default function TrashPage() {
                   )}
 
                   {/* Meta and actions */}
-                  <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-base-200 pt-3">
-                    <span className="text-xs text-base-content/50">
+                  <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+                    <span className="text-xs text-muted-foreground">
                       Deleted {formatDate(post.deletedAt)}
                     </span>
 

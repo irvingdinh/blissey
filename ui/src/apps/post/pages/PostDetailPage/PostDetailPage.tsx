@@ -144,7 +144,7 @@ export default function PostDetailPage() {
   if (!post || postError) {
     return (
       <div className="py-12 text-center">
-        <p className="text-base-content/60">Post not found.</p>
+        <p className="text-muted-foreground">Post not found.</p>
         <button
           className="btn btn-ghost btn-sm mt-4"
           onClick={() => navigate("/")}
@@ -182,7 +182,7 @@ export default function PostDetailPage() {
         )}
 
         {!commentsLoading && comments && comments.length === 0 && (
-          <p className="py-8 text-center text-sm text-base-content/50">
+          <p className="py-8 text-center text-sm text-muted-foreground">
             No comments yet.
           </p>
         )}
@@ -335,7 +335,7 @@ function CommentCard({
 
   return (
     <div
-      className="card bg-base-100 shadow-sm"
+      className="card bg-card shadow-sm"
       data-testid={`comment-${comment.id}`}
     >
       <div className="card-body p-4">
@@ -354,7 +354,7 @@ function CommentCard({
         </div>
 
         {/* Footer: actions + timestamp */}
-        <div className="mt-2 flex items-center gap-2 border-t border-base-200 pt-2">
+        <div className="mt-2 flex items-center gap-2 border-t border-border pt-2">
           <button
             className="btn btn-ghost btn-xs text-xs"
             onClick={onEdit}
@@ -419,7 +419,7 @@ function CommentCard({
             </button>
           )}
 
-          <span className="ml-auto text-xs text-base-content/50">
+          <span className="ml-auto text-xs text-muted-foreground">
             {relativeTime(comment.createdAt)}
           </span>
         </div>

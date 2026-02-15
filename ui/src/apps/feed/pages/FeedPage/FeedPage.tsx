@@ -35,7 +35,7 @@ export default function FeedPage() {
   if (isError) {
     return (
       <div className="py-12 text-center">
-        <p className="text-base-content/60">Failed to load posts.</p>
+        <p className="text-muted-foreground">Failed to load posts.</p>
         <button className="btn btn-ghost btn-sm mt-2" onClick={() => refetch()}>
           Try again
         </button>
@@ -46,7 +46,7 @@ export default function FeedPage() {
   if (!data || data.data.length === 0) {
     return (
       <div className="py-12 text-center">
-        <p className="text-base-content/60">No posts yet.</p>
+        <p className="text-muted-foreground">No posts yet.</p>
       </div>
     );
   }

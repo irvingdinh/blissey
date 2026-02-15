@@ -25,12 +25,15 @@
     "@editorjs/table": "^2.4.5",
     "@editorjs/warning": "^1.4.1",
     "@tanstack/react-query": "^5.90.21",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "daisyui": "^5.5.18",
+    "lucide-react": "^0.511.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "@radix-ui/react-slot": "^1.2.3",
     "react-router": "^7.13.0",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

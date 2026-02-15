@@ -351,10 +351,10 @@ export default function ComposePage() {
                 Back
               </button>
               {saving && (
-                <span className="text-xs text-base-content/50">Saving...</span>
+                <span className="text-xs text-muted-foreground">Saving...</span>
               )}
               {!saving && draftId && (
-                <span className="text-xs text-base-content/50">
+                <span className="text-xs text-muted-foreground">
                   Draft saved
                 </span>
               )}
@@ -461,8 +461,8 @@ export default function ComposePage() {
           }}
           data-testid="drafts-panel"
         >
-          <div className="mx-4 w-full max-w-sm rounded-lg bg-base-100 shadow-xl sm:max-w-md">
-            <div className="flex items-center justify-between border-b border-base-300 px-4 py-3">
+          <div className="mx-4 w-full max-w-sm rounded-lg bg-popover shadow-xl sm:max-w-md">
+            <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <h3 className="font-semibold">Drafts</h3>
               <button
                 className="btn btn-ghost btn-sm"
@@ -486,12 +486,12 @@ export default function ComposePage() {
             </div>
             <div className="max-h-80 overflow-y-auto p-2">
               {loadingDrafts && (
-                <div className="py-4 text-center text-sm text-base-content/50">
+                <div className="py-4 text-center text-sm text-muted-foreground">
                   Loading...
                 </div>
               )}
               {!loadingDrafts && drafts.length === 0 && (
-                <div className="py-4 text-center text-sm text-base-content/50">
+                <div className="py-4 text-center text-sm text-muted-foreground">
                   No drafts
                 </div>
               )}
@@ -499,7 +499,7 @@ export default function ComposePage() {
                 drafts.map((draft) => (
                   <div
                     key={draft.id}
-                    className="flex items-center gap-2 rounded px-3 py-2 hover:bg-base-200"
+                    className="flex items-center gap-2 rounded px-3 py-2 hover:bg-muted"
                   >
                     <button
                       className="min-w-0 flex-1 text-left"
@@ -509,7 +509,7 @@ export default function ComposePage() {
                       <div className="truncate text-sm">
                         {draftPreview(draft.content)}
                       </div>
-                      <div className="text-xs text-base-content/50">
+                      <div className="text-xs text-muted-foreground">
                         {relativeTime(draft.updatedAt)}
                       </div>
                     </button>

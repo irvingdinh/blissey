@@ -1,3 +1,3 @@
 export function DelimiterBlock() {
-  return <hr className="border-base-300" />;
+  return <hr className="border-border" />;
 }

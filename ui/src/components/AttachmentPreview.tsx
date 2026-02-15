@@ -16,7 +16,7 @@ export function AttachmentPreview({
   }
 
   return (
-    <div className="space-y-2 border-t border-base-300 px-4 py-2">
+    <div className="space-y-2 border-t border-border px-4 py-2">
       {/* Gallery thumbnails */}
       {galleryAttachments.length > 0 && (
         <div className="flex flex-wrap gap-2" data-testid="gallery-preview">
@@ -60,10 +60,10 @@ export function AttachmentPreview({
           {fileAttachments.map((att) => (
             <div
               key={att.id}
-              className="flex items-center gap-2 rounded bg-base-200 px-2 py-1 text-sm"
+              className="flex items-center gap-2 rounded bg-muted px-2 py-1 text-sm"
             >
               <span className="truncate">{att.fileName}</span>
-              <span className="shrink-0 text-base-content/50">
+              <span className="shrink-0 text-muted-foreground">
                 {(att.fileSize / 1024).toFixed(0)} KB
               </span>
               <button

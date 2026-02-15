@@ -12,7 +12,7 @@ export function QuoteBlock({ data }: QuoteBlockProps) {
         <InlineContent
           as="cite"
           html={data.caption}
-          className="mt-1 block text-sm not-italic text-base-content/60"
+          className="mt-1 block text-sm not-italic text-muted-foreground"
         />
       )}
     </blockquote>

@@ -43,8 +43,8 @@ export default function AppLayout() {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-base-200">
-      <nav className="navbar sticky top-0 z-40 bg-base-100 shadow-sm">
+    <div className="min-h-screen bg-muted">
+      <nav className="navbar sticky top-0 z-40 bg-background shadow-sm">
         <div className="mx-auto flex w-full max-w-3xl items-center px-4">
           <div className="flex-1">
             <Link to="/" className="text-xl font-bold">

@@ -231,11 +231,11 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
   return (
     <div
       ref={containerRef}
-      className="bg-base-100 border-base-300 w-72 rounded-lg border shadow-lg"
+      className="bg-popover border-border w-72 rounded-lg border shadow-lg"
       data-testid="emoji-picker"
     >
       {/* Search */}
-      <div className="border-base-300 border-b p-2">
+      <div className="border-border border-b p-2">
         <input
           ref={inputRef}
           type="text"
@@ -249,7 +249,7 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
 
       {/* Category tabs */}
       {!search && (
-        <div className="border-base-300 flex gap-1 overflow-x-auto border-b px-2 py-1">
+        <div className="border-border flex gap-1 overflow-x-auto border-b px-2 py-1">
           {EMOJI_CATEGORIES.map((cat, i) => (
             <button
               key={cat.name}
@@ -269,7 +269,7 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
           (cat) => (
             <div key={cat.name}>
               {search && (
-                <div className="text-base-content/50 mb-1 text-xs">
+                <div className="text-muted-foreground mb-1 text-xs">
                   {cat.name}
                 </div>
               )}
@@ -292,7 +292,7 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
           ),
         )}
         {filteredCategories.length === 0 && (
-          <p className="text-base-content/50 py-4 text-center text-sm">
+          <p className="text-muted-foreground py-4 text-center text-sm">
             No emoji found
           </p>
         )}

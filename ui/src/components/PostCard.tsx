@@ -53,7 +53,7 @@ export function PostCard({ post }: PostCardProps) {
   );
 
   return (
-    <div className="card bg-base-100 shadow-sm" data-testid="post-card">
+    <div className="card bg-card shadow-sm" data-testid="post-card">
       <div className="card-body p-4 sm:p-6">
         {/* Content */}
         <div className="prose max-w-none">
@@ -85,10 +85,10 @@ export function PostCard({ post }: PostCardProps) {
             {fileAttachments.map((att) => (
               <div
                 key={att.id}
-                className="flex items-center gap-2 rounded-lg bg-base-200 p-2 text-sm"
+                className="flex items-center gap-2 rounded-lg bg-muted p-2 text-sm"
               >
                 <span className="truncate">{att.fileName}</span>
-                <span className="text-base-content/50 shrink-0">
+                <span className="text-muted-foreground shrink-0">
                   {(att.fileSize / 1024).toFixed(0)} KB
                 </span>
               </div>
@@ -106,7 +106,7 @@ export function PostCard({ post }: PostCardProps) {
         </div>
 
         {/* Footer: actions + timestamp */}
-        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-base-200 pt-3">
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
           <Link
             to={`/posts/${post.id}#comments`}
             className="btn btn-ghost btn-sm gap-1 text-xs"
@@ -216,7 +216,7 @@ export function PostCard({ post }: PostCardProps) {
             </button>
           )}
 
-          <span className="ml-auto text-xs text-base-content/50">
+          <span className="ml-auto text-xs text-muted-foreground">
             {relativeTime(post.createdAt)}
           </span>
         </div>

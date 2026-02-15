@@ -23,7 +23,7 @@ export function EmbedBlock({ data }: EmbedBlockProps) {
         />
       </div>
       {data.caption && (
-        <figcaption className="mt-2 text-center text-sm text-base-content/60">
+        <figcaption className="mt-2 text-center text-sm text-muted-foreground">
           <InlineContent as="span" html={data.caption} />
         </figcaption>
       )}
