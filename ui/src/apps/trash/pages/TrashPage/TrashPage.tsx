@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
 import { Alert } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { parseBlocks } from "@/lib/parse-blocks";
@@ -135,18 +136,16 @@ export default function TrashPage() {
                       Deleted {formatDate(post.deletedAt)}
                     </span>
 
-                    <span
-                      className={`badge badge-sm ${
-                        post.daysRemaining <= 1
-                          ? "badge-error"
-                          : "badge-warning"
-                      }`}
+                    <Badge
+                      variant={
+                        post.daysRemaining <= 1 ? "destructive" : "warning"
+                      }
                       data-testid="days-remaining"
                     >
                       {post.daysRemaining === 0
                         ? "Expires today"
                         : `${post.daysRemaining} day${post.daysRemaining !== 1 ? "s" : ""} left`}
-                    </span>
+                    </Badge>
 
                     <Button
                       variant="default"

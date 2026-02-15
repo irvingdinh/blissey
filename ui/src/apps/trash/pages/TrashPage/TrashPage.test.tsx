@@ -124,7 +124,7 @@ describe("TrashPage", () => {
     });
   });
 
-  it("uses error badge when 1 or fewer days remaining", async () => {
+  it("uses destructive badge when 1 or fewer days remaining", async () => {
     (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve([makeTrashedPost({ daysRemaining: 1 })]),
@@ -134,7 +134,7 @@ describe("TrashPage", () => {
 
     await waitFor(() => {
       const badge = screen.getByTestId("days-remaining");
-      expect(badge.className).toContain("badge-error");
+      expect(badge.className).toContain("bg-destructive");
     });
   });
 
@@ -148,7 +148,7 @@ describe("TrashPage", () => {
 
     await waitFor(() => {
       const badge = screen.getByTestId("days-remaining");
-      expect(badge.className).toContain("badge-warning");
+      expect(badge.className).toContain("text-amber-700");
     });
   });
 

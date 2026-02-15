@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { EmojiPicker } from "@/components/EmojiPicker";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Reaction } from "@/lib/types";
 
@@ -63,15 +64,16 @@ export function ReactionBar({
       data-testid="reaction-bar"
     >
       {reactions.map((r) => (
-        <button
+        <Badge
           key={r.emoji}
-          className="badge badge-ghost hover:badge-primary gap-1 cursor-pointer text-sm transition-colors"
+          variant="outline"
+          className="cursor-pointer gap-1 text-sm hover:bg-primary hover:text-primary-foreground"
           onClick={() => handleToggle(r)}
           data-testid="reaction-badge"
           title={`Remove ${r.emoji} reaction`}
         >
           {r.emoji} {r.count}
-        </button>
+        </Badge>
       ))}
 
       <PickerToggle onAdd={handleAdd} />
