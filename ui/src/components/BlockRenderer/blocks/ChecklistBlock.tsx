@@ -1,3 +1,5 @@
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { InlineContent } from "../InlineContent";
 
 interface ChecklistItem {
@@ -14,12 +16,7 @@ export function ChecklistBlock({ data }: ChecklistBlockProps) {
     <div className="space-y-1">
       {data.items.map((item, i) => (
         <label key={i} className="flex items-start gap-2">
-          <input
-            type="checkbox"
-            checked={item.checked}
-            readOnly
-            className="checkbox checkbox-sm mt-0.5"
-          />
+          <Checkbox checked={item.checked} className="mt-0.5" aria-readonly />
           <InlineContent
             as="span"
             html={item.text}

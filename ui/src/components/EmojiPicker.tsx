@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 const EMOJI_CATEGORIES: { name: string; emojis: string[] }[] = [
@@ -239,10 +240,10 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
     >
       {/* Search */}
       <div className="border-border border-b p-2">
-        <input
+        <Input
           ref={inputRef}
           type="text"
-          className="input input-sm input-bordered w-full"
+          className="h-8 text-sm"
           placeholder="Search emoji..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
