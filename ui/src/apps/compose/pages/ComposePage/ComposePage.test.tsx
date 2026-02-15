@@ -6,7 +6,15 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
+import { toast } from "sonner";
 import { vi } from "vitest";
+
+vi.mock("sonner", () => ({
+  toast: Object.assign(vi.fn(), {
+    success: vi.fn(),
+    error: vi.fn(),
+  }),
+}));
 
 // Mock EditorWrapper
 const mockGetData = vi.fn().mockResolvedValue({
@@ -174,7 +182,7 @@ describe("ComposePage", () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText("Failed to publish")).toBeInTheDocument();
+        expect(toast.error).toHaveBeenCalledWith("Failed to publish");
       });
     });
 
@@ -187,9 +195,7 @@ describe("ComposePage", () => {
       });
 
       await waitFor(() => {
-        expect(
-          screen.getByText("Cannot publish empty post"),
-        ).toBeInTheDocument();
+        expect(toast.error).toHaveBeenCalledWith("Cannot publish empty post");
       });
     });
   });

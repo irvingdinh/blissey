@@ -57,8 +57,8 @@ test.describe("Share Feature — Copy Post as Markdown", () => {
     await expect(shareBtn).toBeVisible();
     await shareBtn.click();
 
-    // Verify the toast appears
-    const toast = page.locator('[data-testid="copied-toast"]');
+    // Verify the sonner toast appears with success message
+    const toast = page.locator("[data-sonner-toast]").first();
     await expect(toast).toBeVisible();
     await expect(toast).toContainText("Copied as Markdown");
 
@@ -90,10 +90,10 @@ test.describe("Share Feature — Copy Post as Markdown", () => {
       .locator('[data-testid="share-btn"]');
     await shareBtn.click();
 
-    const toast = page.locator('[data-testid="copied-toast"]');
+    const toast = page.locator("[data-sonner-toast]").first();
     await expect(toast).toBeVisible();
 
-    // Wait for toast to disappear (2s timeout + buffer)
-    await expect(toast).toBeHidden({ timeout: 5000 });
+    // Wait for toast to disappear (sonner default ~4s + buffer)
+    await expect(toast).toBeHidden({ timeout: 10000 });
   });
 });

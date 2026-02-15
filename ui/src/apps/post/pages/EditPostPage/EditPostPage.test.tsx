@@ -1,7 +1,15 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
+import { toast } from "sonner";
 import { vi } from "vitest";
+
+vi.mock("sonner", () => ({
+  toast: Object.assign(vi.fn(), {
+    success: vi.fn(),
+    error: vi.fn(),
+  }),
+}));
 
 import EditPostPage from "./EditPostPage";
 
@@ -200,7 +208,7 @@ describe("EditPostPage", () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText("Failed to load post")).toBeInTheDocument();
+      expect(toast.error).toHaveBeenCalledWith("Failed to load post");
     });
   });
 

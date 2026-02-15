@@ -1,14 +1,13 @@
 import type { OutputData } from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 
 import { AttachmentPreview } from "@/components/AttachmentPreview";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
-import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import type { Attachment } from "@/lib/types";
-import { useToast } from "@/lib/use-toast";
 
 export default function EditPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +23,6 @@ export default function EditPostPage() {
     [],
   );
   const [fileAttachments, setFileAttachments] = useState<Attachment[]>([]);
-  const toast = useToast();
 
   // Fetch post data on mount
   useEffect(() => {
@@ -34,7 +32,7 @@ export default function EditPostPage() {
       try {
         const res = await fetch(`/api/posts/${id}`);
         if (!res.ok) {
-          toast.show("Failed to load post");
+          toast.error("Failed to load post");
           return;
         }
         const post = await res.json();
@@ -50,14 +48,14 @@ export default function EditPostPage() {
           attachments.filter((a: Attachment) => a.category === "attachment"),
         );
       } catch {
-        toast.show("Failed to load post");
+        toast.error("Failed to load post");
       } finally {
         setLoading(false);
       }
     }
 
     fetchPost();
-  }, [id, toast]);
+  }, [id]);
 
   // Upload gallery image
   const handleGalleryUpload = useCallback(async () => {
@@ -84,15 +82,15 @@ export default function EditPostPage() {
             const attachment: Attachment = await res.json();
             setGalleryAttachments((prev) => [...prev, attachment]);
           } else {
-            toast.show("Failed to upload image");
+            toast.error("Failed to upload image");
           }
         } catch {
-          toast.show("Failed to upload image");
+          toast.error("Failed to upload image");
         }
       }
     };
     input.click();
-  }, [id, toast]);
+  }, [id]);
 
   // Upload file attachment (audio/video)
   const handleFileUpload = useCallback(async () => {
@@ -119,36 +117,33 @@ export default function EditPostPage() {
             const attachment: Attachment = await res.json();
             setFileAttachments((prev) => [...prev, attachment]);
           } else {
-            toast.show("Failed to upload file");
+            toast.error("Failed to upload file");
           }
         } catch {
-          toast.show("Failed to upload file");
+          toast.error("Failed to upload file");
         }
       }
     };
     input.click();
-  }, [id, toast]);
+  }, [id]);
 
   // Remove an attachment
-  const removeAttachment = useCallback(
-    async (attachment: Attachment) => {
-      try {
-        await fetch(`/api/attachments/${attachment.id}`, { method: "DELETE" });
-        if (attachment.category === "gallery") {
-          setGalleryAttachments((prev) =>
-            prev.filter((a) => a.id !== attachment.id),
-          );
-        } else {
-          setFileAttachments((prev) =>
-            prev.filter((a) => a.id !== attachment.id),
-          );
-        }
-      } catch {
-        toast.show("Failed to remove attachment");
+  const removeAttachment = useCallback(async (attachment: Attachment) => {
+    try {
+      await fetch(`/api/attachments/${attachment.id}`, { method: "DELETE" });
+      if (attachment.category === "gallery") {
+        setGalleryAttachments((prev) =>
+          prev.filter((a) => a.id !== attachment.id),
+        );
+      } else {
+        setFileAttachments((prev) =>
+          prev.filter((a) => a.id !== attachment.id),
+        );
       }
-    },
-    [toast],
-  );
+    } catch {
+      toast.error("Failed to remove attachment");
+    }
+  }, []);
 
   // Save post
   const handleSave = useCallback(async () => {
@@ -158,7 +153,7 @@ export default function EditPostPage() {
     try {
       const data = await editorRef.current.getData();
       if (data.blocks.length === 0) {
-        toast.show("Cannot save empty post");
+        toast.error("Cannot save empty post");
         setSaving(false);
         return;
       }
@@ -172,18 +167,18 @@ export default function EditPostPage() {
       });
 
       if (!res.ok) {
-        toast.show("Failed to save");
+        toast.error("Failed to save");
         setSaving(false);
         return;
       }
 
       navigate(`/posts/${id}`);
     } catch {
-      toast.show("Failed to save");
+      toast.error("Failed to save");
     } finally {
       setSaving(false);
     }
-  }, [id, navigate, toast]);
+  }, [id, navigate]);
 
   if (loading) {
     return (
@@ -283,15 +278,6 @@ export default function EditPostPage() {
           ),
         }}
       />
-
-      {/* Toast notification */}
-      {toast.message && (
-        <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2">
-          <Alert variant="destructive" className="shadow-lg">
-            {toast.message}
-          </Alert>
-        </div>
-      )}
     </>
   );
 }

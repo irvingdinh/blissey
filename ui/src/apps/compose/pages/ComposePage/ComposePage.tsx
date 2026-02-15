@@ -1,15 +1,14 @@
 import type { OutputData } from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 import { AttachmentPreview } from "@/components/AttachmentPreview";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
-import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { relativeTime } from "@/lib/relative-time";
 import type { Attachment, Draft } from "@/lib/types";
-import { useToast } from "@/lib/use-toast";
 
 const EMPTY_CONTENT: OutputData = { time: Date.now(), blocks: [] };
 
@@ -27,7 +26,6 @@ export default function ComposePage() {
     [],
   );
   const [fileAttachments, setFileAttachments] = useState<Attachment[]>([]);
-  const toast = useToast();
 
   const draftIdRef = useRef(draftId);
   draftIdRef.current = draftId;
@@ -97,60 +95,54 @@ export default function ComposePage() {
         setDrafts(await res.json());
       }
     } catch {
-      toast.show("Failed to load drafts");
+      toast.error("Failed to load drafts");
     } finally {
       setLoadingDrafts(false);
     }
-  }, [toast]);
+  }, []);
 
   // Load a draft into the editor
-  const loadDraft = useCallback(
-    async (draft: Draft) => {
-      try {
-        const res = await fetch(`/api/drafts/${draft.id}`);
-        if (!res.ok) return;
-        const fullDraft = await res.json();
+  const loadDraft = useCallback(async (draft: Draft) => {
+    try {
+      const res = await fetch(`/api/drafts/${draft.id}`);
+      if (!res.ok) return;
+      const fullDraft = await res.json();
 
-        const content: OutputData = JSON.parse(fullDraft.content);
-        await editorRef.current?.setData(content);
-        setDraftId(draft.id);
+      const content: OutputData = JSON.parse(fullDraft.content);
+      await editorRef.current?.setData(content);
+      setDraftId(draft.id);
 
-        // Load draft attachments
-        const attachments: Attachment[] = fullDraft.attachments ?? [];
-        setGalleryAttachments(
-          attachments.filter((a: Attachment) => a.category === "gallery"),
-        );
-        setFileAttachments(
-          attachments.filter((a: Attachment) => a.category === "attachment"),
-        );
+      // Load draft attachments
+      const attachments: Attachment[] = fullDraft.attachments ?? [];
+      setGalleryAttachments(
+        attachments.filter((a: Attachment) => a.category === "gallery"),
+      );
+      setFileAttachments(
+        attachments.filter((a: Attachment) => a.category === "attachment"),
+      );
 
-        setShowDrafts(false);
-        toast.show("Draft loaded");
-      } catch {
-        toast.show("Failed to load draft");
-      }
-    },
-    [toast],
-  );
+      setShowDrafts(false);
+      toast.success("Draft loaded");
+    } catch {
+      toast.error("Failed to load draft");
+    }
+  }, []);
 
   // Delete a draft from the list
-  const deleteDraft = useCallback(
-    async (id: string) => {
-      try {
-        await fetch(`/api/drafts/${id}`, { method: "DELETE" });
-        setDrafts((prev) => prev.filter((d) => d.id !== id));
-        if (draftIdRef.current === id) {
-          setDraftId(null);
-          setGalleryAttachments([]);
-          setFileAttachments([]);
-          await editorRef.current?.setData(EMPTY_CONTENT);
-        }
-      } catch {
-        toast.show("Failed to delete draft");
+  const deleteDraft = useCallback(async (id: string) => {
+    try {
+      await fetch(`/api/drafts/${id}`, { method: "DELETE" });
+      setDrafts((prev) => prev.filter((d) => d.id !== id));
+      if (draftIdRef.current === id) {
+        setDraftId(null);
+        setGalleryAttachments([]);
+        setFileAttachments([]);
+        await editorRef.current?.setData(EMPTY_CONTENT);
       }
-    },
-    [toast],
-  );
+    } catch {
+      toast.error("Failed to delete draft");
+    }
+  }, []);
 
   // Upload gallery image
   const handleGalleryUpload = useCallback(async () => {
@@ -195,15 +187,15 @@ export default function ComposePage() {
             const attachment: Attachment = await res.json();
             setGalleryAttachments((prev) => [...prev, attachment]);
           } else {
-            toast.show("Failed to upload image");
+            toast.error("Failed to upload image");
           }
         } catch {
-          toast.show("Failed to upload image");
+          toast.error("Failed to upload image");
         }
       }
     };
     input.click();
-  }, [toast]);
+  }, []);
 
   // Upload file attachment (audio/video)
   const handleFileUpload = useCallback(async () => {
@@ -248,36 +240,33 @@ export default function ComposePage() {
             const attachment: Attachment = await res.json();
             setFileAttachments((prev) => [...prev, attachment]);
           } else {
-            toast.show("Failed to upload file");
+            toast.error("Failed to upload file");
           }
         } catch {
-          toast.show("Failed to upload file");
+          toast.error("Failed to upload file");
         }
       }
     };
     input.click();
-  }, [toast]);
+  }, []);
 
   // Remove an attachment
-  const removeAttachment = useCallback(
-    async (attachment: Attachment) => {
-      try {
-        await fetch(`/api/attachments/${attachment.id}`, { method: "DELETE" });
-        if (attachment.category === "gallery") {
-          setGalleryAttachments((prev) =>
-            prev.filter((a) => a.id !== attachment.id),
-          );
-        } else {
-          setFileAttachments((prev) =>
-            prev.filter((a) => a.id !== attachment.id),
-          );
-        }
-      } catch {
-        toast.show("Failed to remove attachment");
+  const removeAttachment = useCallback(async (attachment: Attachment) => {
+    try {
+      await fetch(`/api/attachments/${attachment.id}`, { method: "DELETE" });
+      if (attachment.category === "gallery") {
+        setGalleryAttachments((prev) =>
+          prev.filter((a) => a.id !== attachment.id),
+        );
+      } else {
+        setFileAttachments((prev) =>
+          prev.filter((a) => a.id !== attachment.id),
+        );
       }
-    },
-    [toast],
-  );
+    } catch {
+      toast.error("Failed to remove attachment");
+    }
+  }, []);
 
   // Publish post
   const handlePublish = useCallback(async () => {
@@ -287,7 +276,7 @@ export default function ComposePage() {
     try {
       const data = await editorRef.current.getData();
       if (data.blocks.length === 0) {
-        toast.show("Cannot publish empty post");
+        toast.error("Cannot publish empty post");
         setPublishing(false);
         return;
       }
@@ -302,7 +291,7 @@ export default function ComposePage() {
       });
 
       if (!postRes.ok) {
-        toast.show("Failed to publish");
+        toast.error("Failed to publish");
         setPublishing(false);
         return;
       }
@@ -329,11 +318,11 @@ export default function ComposePage() {
 
       navigate("/");
     } catch {
-      toast.show("Failed to publish");
+      toast.error("Failed to publish");
     } finally {
       setPublishing(false);
     }
-  }, [galleryAttachments, fileAttachments, navigate, toast]);
+  }, [galleryAttachments, fileAttachments, navigate]);
 
   return (
     <>
@@ -543,15 +532,6 @@ export default function ComposePage() {
                 ))}
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Toast notification */}
-      {toast.message && (
-        <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2">
-          <Alert variant="destructive" className="shadow-lg">
-            {toast.message}
-          </Alert>
         </div>
       )}
     </>

@@ -1,19 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
+import { toast } from "sonner";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
 import { GalleryCarousel } from "@/components/GalleryCarousel";
 import { Lightbox } from "@/components/Lightbox";
 import { ReactionBar } from "@/components/ReactionBar";
-import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { editorJsonToMarkdown } from "@/lib/editor-json-to-markdown";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
 import type { Post } from "@/lib/types";
-import { useToast } from "@/lib/use-toast";
 
 interface PostCardProps {
   post: Post;
@@ -34,15 +33,13 @@ export function PostCard({ post }: PostCardProps) {
     },
   });
 
-  const toast = useToast();
-
   const handleShare = async () => {
     const markdown = editorJsonToMarkdown(post.content);
     try {
       await navigator.clipboard.writeText(markdown);
-      toast.show("Copied as Markdown");
+      toast.success("Copied as Markdown");
     } catch {
-      toast.show("Failed to copy");
+      toast.error("Failed to copy");
     }
   };
 
@@ -230,18 +227,6 @@ export function PostCard({ post }: PostCardProps) {
             {relativeTime(post.createdAt)}
           </span>
         </div>
-
-        {/* Toast */}
-        {toast.message && (
-          <div
-            className="fixed bottom-4 right-4 z-50"
-            data-testid="copied-toast"
-          >
-            <Alert variant="success" className="py-2 text-sm shadow-lg">
-              {toast.message}
-            </Alert>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

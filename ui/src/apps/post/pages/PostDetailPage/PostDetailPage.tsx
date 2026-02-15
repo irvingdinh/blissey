@@ -2,19 +2,18 @@ import type { OutputData } from "@editorjs/editorjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
 import { PostCard } from "@/components/PostCard";
 import { ReactionBar } from "@/components/ReactionBar";
-import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
 import type { Comment, Post } from "@/lib/types";
-import { useToast } from "@/lib/use-toast";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +27,6 @@ export default function PostDetailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const toast = useToast();
 
   // Fetch post
   const {
@@ -93,11 +91,11 @@ export default function PostDetailPage() {
         setShowComposer(false);
       }
     } catch {
-      toast.show("Failed to post comment");
+      toast.error("Failed to post comment");
     } finally {
       setSubmitting(false);
     }
-  }, [id, queryClient, toast]);
+  }, [id, queryClient]);
 
   // Update comment
   const updateCommentMutation = useMutation({
@@ -248,15 +246,6 @@ export default function PostDetailPage() {
             ),
           }}
         />
-      )}
-
-      {/* Toast notification */}
-      {toast.message && (
-        <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2">
-          <Alert variant="destructive" className="shadow-lg">
-            {toast.message}
-          </Alert>
-        </div>
       )}
     </div>
   );
