@@ -285,6 +285,8 @@ export default function EditPostPage() {
                         src={`/uploads/${att.thumbnailPath ?? att.filePath}`}
                         alt={att.fileName}
                         className="h-16 w-16 rounded object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <button
                         className="btn btn-circle btn-error btn-xs absolute -right-1 -top-1 opacity-100 sm:opacity-0 transition-opacity sm:group-hover:opacity-100"

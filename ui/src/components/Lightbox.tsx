@@ -175,6 +175,7 @@ export function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
           "select-none",
         )}
         draggable={false}
+        decoding="async"
         data-testid="lightbox-image"
       />
 

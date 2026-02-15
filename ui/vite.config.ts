@@ -11,6 +11,21 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "react-vendor": [
+            "react",
+            "react-dom",
+            "react-router",
+            "react/jsx-runtime",
+          ],
+          "query-vendor": ["@tanstack/react-query"],
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       "/api": {

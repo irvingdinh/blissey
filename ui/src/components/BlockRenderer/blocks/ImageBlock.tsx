@@ -26,6 +26,7 @@ export function ImageBlock({ data }: ImageBlockProps) {
           .filter(Boolean)
           .join(" ")}
         loading="lazy"
+        decoding="async"
       />
       {data.caption && (
         <figcaption className="mt-2 text-center text-sm text-base-content/60">

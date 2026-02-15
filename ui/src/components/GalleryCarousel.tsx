@@ -96,6 +96,7 @@ export function GalleryCarousel({
               alt={img.fileName}
               className="aspect-video w-full cursor-pointer object-cover"
               loading="lazy"
+              decoding="async"
               onClick={() => onImageClick?.(i)}
               data-testid={`gallery-image-${i}`}
             />

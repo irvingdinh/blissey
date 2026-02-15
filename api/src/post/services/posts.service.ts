@@ -98,18 +98,18 @@ export class PostsService {
     const post = await this.postRepository.findOne({ where: { id } });
     if (!post) throw new NotFoundException(`Post "${id}" not found`);
 
-    const reactions = await this.reactionRepository.find({
-      where: { reactableType: 'post', reactableId: id },
-    });
-
-    const commentCount = await this.commentRepository.count({
-      where: { postId: id },
-    });
-
-    const attachments = await this.attachmentRepository.find({
-      where: { attachableType: 'post', attachableId: id },
-      order: { createdAt: 'ASC' },
-    });
+    const [reactions, commentCount, attachments] = await Promise.all([
+      this.reactionRepository.find({
+        where: { reactableType: 'post', reactableId: id },
+      }),
+      this.commentRepository.count({
+        where: { postId: id },
+      }),
+      this.attachmentRepository.find({
+        where: { attachableType: 'post', attachableId: id },
+        order: { createdAt: 'ASC' },
+      }),
+    ]);
 
     return {
       ...post,
