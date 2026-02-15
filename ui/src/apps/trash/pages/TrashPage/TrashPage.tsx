@@ -3,14 +3,7 @@ import { useState } from "react";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
 import { parseBlocks } from "@/lib/parse-blocks";
-
-interface TrashedPost {
-  id: string;
-  content: string;
-  createdAt: string;
-  deletedAt: string;
-  daysRemaining: number;
-}
+import type { TrashedPost } from "@/lib/types";
 
 function previewText(content: string): string {
   const blocks = parseBlocks(content);

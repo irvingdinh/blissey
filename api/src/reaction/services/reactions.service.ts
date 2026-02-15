@@ -1,14 +1,11 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CommentEntity } from '../../core/entities/comment.entity';
 import { PostEntity } from '../../core/entities/post.entity';
 import { ReactionEntity } from '../../core/entities/reaction.entity';
+import { ReactableType } from '../../core/enums';
 import { CreateReactionRequestDto } from '../dtos';
 
 @Injectable()
@@ -23,24 +20,20 @@ export class ReactionsService {
   ) {}
 
   async create(dto: CreateReactionRequestDto): Promise<ReactionEntity> {
-    if (dto.reactableType === 'post') {
+    if (dto.reactableType === ReactableType.POST) {
       const post = await this.postRepository.findOne({
         where: { id: dto.reactableId },
       });
       if (!post) {
         throw new NotFoundException(`Post "${dto.reactableId}" not found`);
       }
-    } else if (dto.reactableType === 'comment') {
+    } else {
       const comment = await this.commentRepository.findOne({
         where: { id: dto.reactableId },
       });
       if (!comment) {
         throw new NotFoundException(`Comment "${dto.reactableId}" not found`);
       }
-    } else {
-      throw new BadRequestException(
-        `Invalid reactable type "${dto.reactableType}"`,
-      );
     }
 
     const reaction = this.reactionRepository.create({

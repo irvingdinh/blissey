@@ -2,12 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { EmojiPicker } from "@/components/EmojiPicker";
-
-export interface Reaction {
-  emoji: string;
-  count: number;
-  ids: string[];
-}
+import type { Reaction } from "@/lib/types";
 
 interface ReactionBarProps {
   reactions: Reaction[];

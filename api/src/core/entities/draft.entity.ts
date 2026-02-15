@@ -1,18 +1,9 @@
-import { nanoid } from 'nanoid';
-import {
-  BeforeInsert,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
+
+import { BaseEntity } from './base.entity';
 
 @Entity('drafts')
-export class DraftEntity {
-  @PrimaryColumn()
-  id: string;
-
+export class DraftEntity extends BaseEntity {
   @Column({ type: 'text' })
   content: string;
 
@@ -21,11 +12,4 @@ export class DraftEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @BeforeInsert()
-  generateId() {
-    if (!this.id) {
-      this.id = nanoid();
-    }
-  }
 }

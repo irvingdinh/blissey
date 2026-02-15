@@ -1,9 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { ContentRequestDto } from '../../core/dtos';
 
-export class UpdateDraftRequestDto {
-  @ApiProperty({ description: 'Editor.js block JSON content' })
-  @IsString()
-  @IsNotEmpty()
-  content: string;
-}
+export class UpdateDraftRequestDto extends ContentRequestDto {}

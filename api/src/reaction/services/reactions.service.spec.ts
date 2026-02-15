@@ -22,9 +22,10 @@ jest.mock('typeorm', () => {
   };
 });
 
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 
 import { ReactionEntity } from '../../core/entities/reaction.entity';
+import { ReactableType } from '../../core/enums';
 import { ReactionsService } from './reactions.service';
 
 describe('ReactionsService', () => {
@@ -62,7 +63,7 @@ describe('ReactionsService', () => {
       const reaction = new ReactionEntity();
       Object.assign(reaction, {
         id: 'reaction-1',
-        reactableType: 'post',
+        reactableType: ReactableType.POST,
         reactableId: 'post-1',
         emoji: '👍',
       });
@@ -71,7 +72,7 @@ describe('ReactionsService', () => {
       mockReactionRepository.save.mockResolvedValue(reaction);
 
       const result = await service.create({
-        reactableType: 'post',
+        reactableType: ReactableType.POST,
         reactableId: 'post-1',
         emoji: '👍',
       });
@@ -80,7 +81,7 @@ describe('ReactionsService', () => {
         where: { id: 'post-1' },
       });
       expect(mockReactionRepository.create).toHaveBeenCalledWith({
-        reactableType: 'post',
+        reactableType: ReactableType.POST,
         reactableId: 'post-1',
         emoji: '👍',
       });
@@ -94,7 +95,7 @@ describe('ReactionsService', () => {
       const reaction = new ReactionEntity();
       Object.assign(reaction, {
         id: 'reaction-1',
-        reactableType: 'comment',
+        reactableType: ReactableType.COMMENT,
         reactableId: 'comment-1',
         emoji: '❤️',
       });
@@ -103,7 +104,7 @@ describe('ReactionsService', () => {
       mockReactionRepository.save.mockResolvedValue(reaction);
 
       const result = await service.create({
-        reactableType: 'comment',
+        reactableType: ReactableType.COMMENT,
         reactableId: 'comment-1',
         emoji: '❤️',
       });
@@ -112,7 +113,7 @@ describe('ReactionsService', () => {
         where: { id: 'comment-1' },
       });
       expect(mockReactionRepository.create).toHaveBeenCalledWith({
-        reactableType: 'comment',
+        reactableType: ReactableType.COMMENT,
         reactableId: 'comment-1',
         emoji: '❤️',
       });
@@ -124,7 +125,7 @@ describe('ReactionsService', () => {
 
       await expect(
         service.create({
-          reactableType: 'post',
+          reactableType: ReactableType.POST,
           reactableId: 'nonexistent',
           emoji: '👍',
         }),
@@ -136,21 +137,11 @@ describe('ReactionsService', () => {
 
       await expect(
         service.create({
-          reactableType: 'comment',
+          reactableType: ReactableType.COMMENT,
           reactableId: 'nonexistent',
           emoji: '👍',
         }),
       ).rejects.toThrow(NotFoundException);
-    });
-
-    it('should throw BadRequestException for invalid reactable type', async () => {
-      await expect(
-        service.create({
-          reactableType: 'invalid',
-          reactableId: 'some-id',
-          emoji: '👍',
-        }),
-      ).rejects.toThrow(BadRequestException);
     });
   });
 

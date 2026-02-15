@@ -5,6 +5,7 @@ import { In, Repository } from 'typeorm';
 import { CommentEntity } from '../../core/entities/comment.entity';
 import { PostEntity } from '../../core/entities/post.entity';
 import { ReactionEntity } from '../../core/entities/reaction.entity';
+import { ReactableType } from '../../core/enums';
 import { groupReactions } from '../../core/services';
 import { CreateCommentRequestDto, UpdateCommentRequestDto } from '../dtos';
 
@@ -32,7 +33,10 @@ export class CommentsService {
 
     const commentIds = comments.map((c) => c.id);
     const reactions = await this.reactionRepository.find({
-      where: { reactableType: 'comment', reactableId: In(commentIds) },
+      where: {
+        reactableType: ReactableType.COMMENT,
+        reactableId: In(commentIds),
+      },
     });
 
     const reactionsByComment = new Map<string, ReactionEntity[]>();

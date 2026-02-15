@@ -9,6 +9,7 @@ import { CommentEntity } from '../entities/comment.entity';
 import { DraftEntity } from '../entities/draft.entity';
 import { PostEntity } from '../entities/post.entity';
 import { ReactionEntity } from '../entities/reaction.entity';
+import { AttachableType, ReactableType } from '../enums';
 import { DirectoryService } from './directory.service';
 
 @Injectable()
@@ -41,7 +42,7 @@ export class CleanupService {
     if (oldDrafts.length === 0) return 0;
 
     for (const draft of oldDrafts) {
-      await this.removeAttachments('draft', draft.id);
+      await this.removeAttachments(AttachableType.DRAFT, draft.id);
     }
 
     await this.draftRepository.remove(oldDrafts);
@@ -72,20 +73,20 @@ export class CleanupService {
         const commentIds = comments.map((c) => c.id);
 
         for (const comment of comments) {
-          await this.removeAttachments('comment', comment.id);
+          await this.removeAttachments(AttachableType.COMMENT, comment.id);
         }
 
         await this.reactionRepository.delete({
-          reactableType: 'comment',
+          reactableType: ReactableType.COMMENT,
           reactableId: In(commentIds),
         });
 
         await this.commentRepository.remove(comments);
       }
 
-      await this.removeAttachments('post', post.id);
+      await this.removeAttachments(AttachableType.POST, post.id);
       await this.reactionRepository.delete({
-        reactableType: 'post',
+        reactableType: ReactableType.POST,
         reactableId: post.id,
       });
     }

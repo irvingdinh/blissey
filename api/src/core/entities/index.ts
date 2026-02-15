@@ -6,6 +6,7 @@ import { ReactionEntity } from './reaction.entity';
 import { SettingEntity } from './setting.entity';
 
 export { AttachmentEntity } from './attachment.entity';
+export { BaseEntity } from './base.entity';
 export { CommentEntity } from './comment.entity';
 export { DraftEntity } from './draft.entity';
 export { PostEntity } from './post.entity';

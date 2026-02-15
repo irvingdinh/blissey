@@ -1,19 +1,10 @@
-import { nanoid } from 'nanoid';
-import {
-  BeforeInsert,
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index } from 'typeorm';
+
+import { BaseEntity } from './base.entity';
 
 @Entity('reactions')
 @Index(['reactableType', 'reactableId'])
-export class ReactionEntity {
-  @PrimaryColumn()
-  id: string;
-
+export class ReactionEntity extends BaseEntity {
   @Column()
   reactableType: string;
 
@@ -25,11 +16,4 @@ export class ReactionEntity {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @BeforeInsert()
-  generateId() {
-    if (!this.id) {
-      this.id = nanoid();
-    }
-  }
 }

@@ -1,23 +1,18 @@
-import { nanoid } from 'nanoid';
 import {
-  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   Index,
   ManyToOne,
-  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+import { BaseEntity } from './base.entity';
 import { PostEntity } from './post.entity';
 
 @Entity('comments')
-export class CommentEntity {
-  @PrimaryColumn()
-  id: string;
-
+export class CommentEntity extends BaseEntity {
   @Index()
   @Column()
   postId: string;
@@ -36,11 +31,4 @@ export class CommentEntity {
 
   @ManyToOne(() => PostEntity, (post) => post.comments)
   post: PostEntity;
-
-  @BeforeInsert()
-  generateId() {
-    if (!this.id) {
-      this.id = nanoid();
-    }
-  }
 }

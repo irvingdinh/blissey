@@ -1,19 +1,10 @@
-import { nanoid } from 'nanoid';
-import {
-  BeforeInsert,
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index } from 'typeorm';
+
+import { BaseEntity } from './base.entity';
 
 @Entity('attachments')
 @Index(['attachableType', 'attachableId'])
-export class AttachmentEntity {
-  @PrimaryColumn()
-  id: string;
-
+export class AttachmentEntity extends BaseEntity {
   @Column()
   attachableType: string;
 
@@ -40,11 +31,4 @@ export class AttachmentEntity {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @BeforeInsert()
-  generateId() {
-    if (!this.id) {
-      this.id = nanoid();
-    }
-  }
 }

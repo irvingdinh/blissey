@@ -1,7 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 
-import { type Reaction, ReactionBar } from "./ReactionBar";
+import type { Reaction } from "@/lib/types";
+
+import { ReactionBar } from "./ReactionBar";
 
 function renderReactionBar(
   reactions: Reaction[] = [],

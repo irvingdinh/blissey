@@ -2,9 +2,11 @@ import type { OutputData } from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
+import { AttachmentPreview } from "@/components/AttachmentPreview";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
 import type { Attachment } from "@/lib/types";
+import { useToast } from "@/lib/use-toast";
 
 export default function EditPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,12 +22,7 @@ export default function EditPostPage() {
     [],
   );
   const [fileAttachments, setFileAttachments] = useState<Attachment[]>([]);
-  const [toast, setToast] = useState<string | null>(null);
-
-  const showToast = useCallback((message: string) => {
-    setToast(message);
-    setTimeout(() => setToast(null), 2000);
-  }, []);
+  const toast = useToast();
 
   // Fetch post data on mount
   useEffect(() => {
@@ -35,7 +32,7 @@ export default function EditPostPage() {
       try {
         const res = await fetch(`/api/posts/${id}`);
         if (!res.ok) {
-          showToast("Failed to load post");
+          toast.show("Failed to load post");
           return;
         }
         const post = await res.json();
@@ -51,14 +48,14 @@ export default function EditPostPage() {
           attachments.filter((a: Attachment) => a.category === "attachment"),
         );
       } catch {
-        showToast("Failed to load post");
+        toast.show("Failed to load post");
       } finally {
         setLoading(false);
       }
     }
 
     fetchPost();
-  }, [id, showToast]);
+  }, [id, toast]);
 
   // Upload gallery image
   const handleGalleryUpload = useCallback(async () => {
@@ -85,15 +82,15 @@ export default function EditPostPage() {
             const attachment: Attachment = await res.json();
             setGalleryAttachments((prev) => [...prev, attachment]);
           } else {
-            showToast("Failed to upload image");
+            toast.show("Failed to upload image");
           }
         } catch {
-          showToast("Failed to upload image");
+          toast.show("Failed to upload image");
         }
       }
     };
     input.click();
-  }, [id, showToast]);
+  }, [id, toast]);
 
   // Upload file attachment (audio/video)
   const handleFileUpload = useCallback(async () => {
@@ -120,15 +117,15 @@ export default function EditPostPage() {
             const attachment: Attachment = await res.json();
             setFileAttachments((prev) => [...prev, attachment]);
           } else {
-            showToast("Failed to upload file");
+            toast.show("Failed to upload file");
           }
         } catch {
-          showToast("Failed to upload file");
+          toast.show("Failed to upload file");
         }
       }
     };
     input.click();
-  }, [id, showToast]);
+  }, [id, toast]);
 
   // Remove an attachment
   const removeAttachment = useCallback(
@@ -145,10 +142,10 @@ export default function EditPostPage() {
           );
         }
       } catch {
-        showToast("Failed to remove attachment");
+        toast.show("Failed to remove attachment");
       }
     },
-    [showToast],
+    [toast],
   );
 
   // Save post
@@ -159,7 +156,7 @@ export default function EditPostPage() {
     try {
       const data = await editorRef.current.getData();
       if (data.blocks.length === 0) {
-        showToast("Cannot save empty post");
+        toast.show("Cannot save empty post");
         setSaving(false);
         return;
       }
@@ -173,18 +170,18 @@ export default function EditPostPage() {
       });
 
       if (!res.ok) {
-        showToast("Failed to save");
+        toast.show("Failed to save");
         setSaving(false);
         return;
       }
 
       navigate(`/posts/${id}`);
     } catch {
-      showToast("Failed to save");
+      toast.show("Failed to save");
     } finally {
       setSaving(false);
     }
-  }, [id, navigate, showToast]);
+  }, [id, navigate, toast]);
 
   if (loading) {
     return (
@@ -272,93 +269,20 @@ export default function EditPostPage() {
           ),
           bottom: (galleryAttachments.length > 0 ||
             fileAttachments.length > 0) && (
-            <div className="space-y-2 border-t border-base-300 px-4 py-2">
-              {/* Gallery thumbnails */}
-              {galleryAttachments.length > 0 && (
-                <div
-                  className="flex flex-wrap gap-2"
-                  data-testid="gallery-preview"
-                >
-                  {galleryAttachments.map((att) => (
-                    <div key={att.id} className="group relative">
-                      <img
-                        src={`/uploads/${att.thumbnailPath ?? att.filePath}`}
-                        alt={att.fileName}
-                        className="h-16 w-16 rounded object-cover"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                      <button
-                        className="btn btn-circle btn-error btn-xs absolute -right-1 -top-1 opacity-100 sm:opacity-0 transition-opacity sm:group-hover:opacity-100"
-                        onClick={() => removeAttachment(att)}
-                        data-testid={`remove-gallery-${att.id}`}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3 w-3"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* File attachments */}
-              {fileAttachments.length > 0 && (
-                <div className="space-y-1" data-testid="file-preview">
-                  {fileAttachments.map((att) => (
-                    <div
-                      key={att.id}
-                      className="flex items-center gap-2 rounded bg-base-200 px-2 py-1 text-sm"
-                    >
-                      <span className="truncate">{att.fileName}</span>
-                      <span className="shrink-0 text-base-content/50">
-                        {(att.fileSize / 1024).toFixed(0)} KB
-                      </span>
-                      <button
-                        className="btn btn-ghost btn-xs ml-auto"
-                        onClick={() => removeAttachment(att)}
-                        data-testid={`remove-file-${att.id}`}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3 w-3"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <AttachmentPreview
+              galleryAttachments={galleryAttachments}
+              fileAttachments={fileAttachments}
+              onRemove={removeAttachment}
+            />
           ),
         }}
       />
 
       {/* Toast notification */}
-      {toast && (
+      {toast.message && (
         <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2">
           <div className="alert shadow-lg">
-            <span className="text-sm">{toast}</span>
+            <span className="text-sm">{toast.message}</span>
           </div>
         </div>
       )}

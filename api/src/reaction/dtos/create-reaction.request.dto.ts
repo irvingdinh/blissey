@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+
+import { ReactableType } from '../../core/enums';
 
 export class CreateReactionRequestDto {
   @ApiProperty({
     description: 'Type of the reactable entity',
-    enum: ['post', 'comment'],
+    enum: ReactableType,
   })
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(['post', 'comment'])
-  reactableType: string;
+  @IsEnum(ReactableType)
+  reactableType: ReactableType;
 
   @ApiProperty({ description: 'ID of the reactable entity' })
   @IsString()

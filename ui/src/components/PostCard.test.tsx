@@ -2,7 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 
-import { type Post, PostCard } from "./PostCard";
+import type { Post } from "@/lib/types";
+
+import { PostCard } from "./PostCard";
 
 function makePost(overrides: Partial<Post> = {}): Post {
   return {

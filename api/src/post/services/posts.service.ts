@@ -6,6 +6,7 @@ import { AttachmentEntity } from '../../core/entities/attachment.entity';
 import { CommentEntity } from '../../core/entities/comment.entity';
 import { PostEntity } from '../../core/entities/post.entity';
 import { ReactionEntity } from '../../core/entities/reaction.entity';
+import { AttachableType, ReactableType } from '../../core/enums';
 import { groupReactions } from '../../core/services';
 import { CreatePostRequestDto, UpdatePostRequestDto } from '../dtos';
 
@@ -44,7 +45,7 @@ export class PostsService {
 
     const [reactions, commentCounts, attachments] = await Promise.all([
       this.reactionRepository.find({
-        where: { reactableType: 'post', reactableId: In(postIds) },
+        where: { reactableType: ReactableType.POST, reactableId: In(postIds) },
       }),
       this.commentRepository
         .createQueryBuilder('comment')
@@ -55,7 +56,10 @@ export class PostsService {
         .groupBy('comment.postId')
         .getRawMany<{ postId: string; count: string }>(),
       this.attachmentRepository.find({
-        where: { attachableType: 'post', attachableId: In(postIds) },
+        where: {
+          attachableType: AttachableType.POST,
+          attachableId: In(postIds),
+        },
         order: { createdAt: 'ASC' },
       }),
     ]);
@@ -100,13 +104,13 @@ export class PostsService {
 
     const [reactions, commentCount, attachments] = await Promise.all([
       this.reactionRepository.find({
-        where: { reactableType: 'post', reactableId: id },
+        where: { reactableType: ReactableType.POST, reactableId: id },
       }),
       this.commentRepository.count({
         where: { postId: id },
       }),
       this.attachmentRepository.find({
-        where: { attachableType: 'post', attachableId: id },
+        where: { attachableType: AttachableType.POST, attachableId: id },
         order: { createdAt: 'ASC' },
       }),
     ]);

@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+
+import { AttachableType } from '../../core/enums';
 
 export class UpdateAttachmentRequestDto {
   @ApiProperty({
     description: 'Type of the parent entity',
-    enum: ['post', 'draft', 'comment'],
+    enum: AttachableType,
   })
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(['post', 'draft', 'comment'])
-  attachable_type: string;
+  @IsEnum(AttachableType)
+  attachable_type: AttachableType;
 
   @ApiProperty({ description: 'ID of the parent entity' })
   @IsString()

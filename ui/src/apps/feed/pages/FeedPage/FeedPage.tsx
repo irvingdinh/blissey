@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { Pagination } from "@/components/Pagination";
-import { type Post, PostCard } from "@/components/PostCard";
+import { PostCard } from "@/components/PostCard";
+import type { Post } from "@/lib/types";
 
 interface FeedResponse {
   data: Post[];

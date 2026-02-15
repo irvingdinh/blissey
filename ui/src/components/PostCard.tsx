@@ -5,21 +5,12 @@ import { Link } from "react-router";
 import { BlockRenderer } from "@/components/BlockRenderer";
 import { GalleryCarousel } from "@/components/GalleryCarousel";
 import { Lightbox } from "@/components/Lightbox";
-import { type Reaction, ReactionBar } from "@/components/ReactionBar";
+import { ReactionBar } from "@/components/ReactionBar";
 import { editorJsonToMarkdown } from "@/lib/editor-json-to-markdown";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
-import type { Attachment } from "@/lib/types";
-
-export interface Post {
-  id: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  reactions: Reaction[];
-  commentCount: number;
-  attachments: Attachment[];
-}
+import type { Post } from "@/lib/types";
+import { useToast } from "@/lib/use-toast";
 
 interface PostCardProps {
   post: Post;
@@ -40,17 +31,16 @@ export function PostCard({ post }: PostCardProps) {
     },
   });
 
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const toast = useToast();
 
   const handleShare = async () => {
     const markdown = editorJsonToMarkdown(post.content);
     try {
       await navigator.clipboard.writeText(markdown);
-      setToastMessage("Copied as Markdown");
+      toast.show("Copied as Markdown");
     } catch {
-      setToastMessage("Failed to copy");
+      toast.show("Failed to copy");
     }
-    setTimeout(() => setToastMessage(null), 2000);
   };
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -232,14 +222,14 @@ export function PostCard({ post }: PostCardProps) {
         </div>
 
         {/* Toast */}
-        {toastMessage && (
+        {toast.message && (
           <div
             className="toast toast-end toast-bottom"
             data-testid="copied-toast"
             role="alert"
           >
             <div className="alert alert-success py-2 text-sm">
-              {toastMessage}
+              {toast.message}
             </div>
           </div>
         )}

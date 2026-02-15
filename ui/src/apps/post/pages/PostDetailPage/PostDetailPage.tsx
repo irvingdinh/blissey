@@ -6,17 +6,12 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { BlockRenderer } from "@/components/BlockRenderer";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
-import { type Post, PostCard } from "@/components/PostCard";
-import { type Reaction, ReactionBar } from "@/components/ReactionBar";
+import { PostCard } from "@/components/PostCard";
+import { ReactionBar } from "@/components/ReactionBar";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
-
-type Comment = {
-  id: string;
-  content: string;
-  createdAt: string;
-  reactions: Reaction[];
-};
+import type { Comment, Post } from "@/lib/types";
+import { useToast } from "@/lib/use-toast";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -30,7 +25,7 @@ export default function PostDetailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
+  const toast = useToast();
 
   // Fetch post
   const {
@@ -95,12 +90,11 @@ export default function PostDetailPage() {
         setShowComposer(false);
       }
     } catch {
-      setToast("Failed to post comment");
-      setTimeout(() => setToast(null), 2000);
+      toast.show("Failed to post comment");
     } finally {
       setSubmitting(false);
     }
-  }, [id, queryClient]);
+  }, [id, queryClient, toast]);
 
   // Update comment
   const updateCommentMutation = useMutation({
@@ -249,10 +243,10 @@ export default function PostDetailPage() {
       )}
 
       {/* Toast notification */}
-      {toast && (
+      {toast.message && (
         <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2">
           <div className="alert alert-error shadow-lg">
-            <span className="text-sm">{toast}</span>
+            <span className="text-sm">{toast.message}</span>
           </div>
         </div>
       )}
