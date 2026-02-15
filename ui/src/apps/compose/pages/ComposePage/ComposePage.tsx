@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { AttachmentPreview } from "@/components/AttachmentPreview";
 import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { relativeTime } from "@/lib/relative-time";
 import type { Attachment, Draft } from "@/lib/types";
@@ -548,9 +549,9 @@ export default function ComposePage() {
       {/* Toast notification */}
       {toast.message && (
         <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2">
-          <div className="alert shadow-lg">
-            <span className="text-sm">{toast.message}</span>
-          </div>
+          <Alert variant="destructive" className="shadow-lg">
+            {toast.message}
+          </Alert>
         </div>
       )}
     </>

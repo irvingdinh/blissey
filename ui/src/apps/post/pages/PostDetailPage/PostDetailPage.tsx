@@ -8,6 +8,7 @@ import type { EditorWrapperHandle } from "@/components/EditorWrapper";
 import EditorWrapper from "@/components/EditorWrapper";
 import { PostCard } from "@/components/PostCard";
 import { ReactionBar } from "@/components/ReactionBar";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { parseBlocks } from "@/lib/parse-blocks";
@@ -252,9 +253,9 @@ export default function PostDetailPage() {
       {/* Toast notification */}
       {toast.message && (
         <div className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2">
-          <div className="alert alert-error shadow-lg">
-            <span className="text-sm">{toast.message}</span>
-          </div>
+          <Alert variant="destructive" className="shadow-lg">
+            {toast.message}
+          </Alert>
         </div>
       )}
     </div>

@@ -6,6 +6,7 @@ import { BlockRenderer } from "@/components/BlockRenderer";
 import { GalleryCarousel } from "@/components/GalleryCarousel";
 import { Lightbox } from "@/components/Lightbox";
 import { ReactionBar } from "@/components/ReactionBar";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { editorJsonToMarkdown } from "@/lib/editor-json-to-markdown";
@@ -233,13 +234,12 @@ export function PostCard({ post }: PostCardProps) {
         {/* Toast */}
         {toast.message && (
           <div
-            className="toast toast-end toast-bottom"
+            className="fixed bottom-4 right-4 z-50"
             data-testid="copied-toast"
-            role="alert"
           >
-            <div className="alert alert-success py-2 text-sm">
+            <Alert variant="success" className="py-2 text-sm shadow-lg">
               {toast.message}
-            </div>
+            </Alert>
           </div>
         )}
       </CardContent>

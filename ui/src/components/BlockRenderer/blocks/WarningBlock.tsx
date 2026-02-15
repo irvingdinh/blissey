@@ -1,3 +1,5 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 import { InlineContent } from "../InlineContent";
 
 interface WarningBlockProps {
@@ -6,7 +8,7 @@ interface WarningBlockProps {
 
 export function WarningBlock({ data }: WarningBlockProps) {
   return (
-    <div role="alert" className="alert alert-warning">
+    <Alert variant="warning">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-5 w-5 shrink-0"
@@ -23,10 +25,14 @@ export function WarningBlock({ data }: WarningBlockProps) {
       </svg>
       <div>
         {data.title && (
-          <InlineContent as="h3" html={data.title} className="font-bold" />
+          <AlertTitle>
+            <InlineContent as="span" html={data.title} className="font-bold" />
+          </AlertTitle>
         )}
-        <InlineContent as="div" html={data.message} className="text-sm" />
+        <AlertDescription>
+          <InlineContent as="span" html={data.message} />
+        </AlertDescription>
       </div>
-    </div>
+    </Alert>
   );
 }

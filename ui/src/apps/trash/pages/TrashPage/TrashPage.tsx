@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { parseBlocks } from "@/lib/parse-blocks";
@@ -70,9 +71,9 @@ export default function TrashPage() {
 
       {/* Success toast */}
       {restoredId && (
-        <div className="alert alert-success mb-4" data-testid="restore-toast">
-          <span>Post restored successfully.</span>
-        </div>
+        <Alert variant="success" className="mb-4" data-testid="restore-toast">
+          Post restored successfully.
+        </Alert>
       )}
 
       {!data || data.length === 0 ? (
