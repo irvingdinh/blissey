@@ -189,7 +189,7 @@ const EditorWrapper = forwardRef<EditorWrapperHandle, EditorWrapperProps>(
         <div className="fixed inset-0 z-50 flex flex-col bg-background">
           {toolbar && (
             <>
-              <div className="navbar min-h-0 border-b border-border px-4 py-2">
+              <div className="flex items-center border-b border-border px-4 py-2">
                 <div className="flex-1">{toolbar.left}</div>
                 <div className="flex items-center gap-2">{toolbar.right}</div>
               </div>
