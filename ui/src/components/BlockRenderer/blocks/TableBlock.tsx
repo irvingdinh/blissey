@@ -1,3 +1,12 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import { InlineContent } from "../InlineContent";
 
 interface TableBlockProps {
@@ -16,31 +25,29 @@ export function TableBlock({ data }: TableBlockProps) {
   const bodyRows = hasHeader ? rows.slice(1) : rows;
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table table-sm">
-        {headerRow && (
-          <thead>
-            <tr>
-              {headerRow.map((cell, i) => (
-                <th key={i}>
-                  <InlineContent as="span" html={cell} />
-                </th>
-              ))}
-            </tr>
-          </thead>
-        )}
-        <tbody>
-          {bodyRows.map((row, rowIdx) => (
-            <tr key={rowIdx}>
-              {row.map((cell, cellIdx) => (
-                <td key={cellIdx}>
-                  <InlineContent as="span" html={cell} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Table>
+      {headerRow && (
+        <TableHeader>
+          <TableRow>
+            {headerRow.map((cell, i) => (
+              <TableHead key={i}>
+                <InlineContent as="span" html={cell} />
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+      )}
+      <TableBody>
+        {bodyRows.map((row, rowIdx) => (
+          <TableRow key={rowIdx}>
+            {row.map((cell, cellIdx) => (
+              <TableCell key={cellIdx}>
+                <InlineContent as="span" html={cell} />
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
