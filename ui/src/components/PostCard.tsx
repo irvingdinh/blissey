@@ -7,6 +7,7 @@ import { GalleryCarousel } from "@/components/GalleryCarousel";
 import { Lightbox } from "@/components/Lightbox";
 import { ReactionBar } from "@/components/ReactionBar";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { editorJsonToMarkdown } from "@/lib/editor-json-to-markdown";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
@@ -54,8 +55,8 @@ export function PostCard({ post }: PostCardProps) {
   );
 
   return (
-    <div className="card bg-card shadow-sm" data-testid="post-card">
-      <div className="card-body p-4 sm:p-6">
+    <Card data-testid="post-card">
+      <CardContent className="p-4 sm:p-6">
         {/* Content */}
         <div className="prose max-w-none">
           <BlockRenderer blocks={blocks} />
@@ -241,7 +242,7 @@ export function PostCard({ post }: PostCardProps) {
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

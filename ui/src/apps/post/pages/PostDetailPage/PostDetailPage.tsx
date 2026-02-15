@@ -9,6 +9,7 @@ import EditorWrapper from "@/components/EditorWrapper";
 import { PostCard } from "@/components/PostCard";
 import { ReactionBar } from "@/components/ReactionBar";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { parseBlocks } from "@/lib/parse-blocks";
 import { relativeTime } from "@/lib/relative-time";
 import type { Comment, Post } from "@/lib/types";
@@ -341,11 +342,8 @@ function CommentCard({
   }
 
   return (
-    <div
-      className="card bg-card shadow-sm"
-      data-testid={`comment-${comment.id}`}
-    >
-      <div className="card-body p-4">
+    <Card data-testid={`comment-${comment.id}`}>
+      <CardContent className="p-4">
         {/* Comment content */}
         <div className="prose max-w-none text-sm">
           <BlockRenderer blocks={blocks} />
@@ -438,7 +436,7 @@ function CommentCard({
             {relativeTime(comment.createdAt)}
           </span>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

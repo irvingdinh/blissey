@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { BlockRenderer } from "@/components/BlockRenderer";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { parseBlocks } from "@/lib/parse-blocks";
 import type { TrashedPost } from "@/lib/types";
 
@@ -99,12 +100,8 @@ export default function TrashPage() {
             const blocks = parseBlocks(post.content);
 
             return (
-              <div
-                key={post.id}
-                className="card bg-card shadow-sm"
-                data-testid="trash-item"
-              >
-                <div className="card-body p-4 sm:p-5">
+              <Card key={post.id} data-testid="trash-item">
+                <CardContent className="p-4 sm:p-5">
                   {/* Preview or full content */}
                   {isExpanded ? (
                     <div className="prose max-w-none">
@@ -165,8 +162,8 @@ export default function TrashPage() {
                       )}
                     </Button>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
